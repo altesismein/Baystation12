@@ -15,7 +15,6 @@
 	var/list/engines = list()
 	var/engines_state = 1 //global on/off toggle for all engines
 	var/thrust_limit = 1 //global thrust limit for all engines, 0..1
-	var/triggers_events = 1
 
 /obj/effect/overmap/ship/Initialize()
 	. = ..()
@@ -174,3 +173,8 @@
 	if(istype(A,/turf/unsimulated/map/edge))
 		handle_wraparound()
 	..()
+
+/obj/effect/overmap/ship/proc/get_helm_skill()
+	. = SKILL_MIN
+	if(nav_control)
+		. = nav_control.operator_skill || .

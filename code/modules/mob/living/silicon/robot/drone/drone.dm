@@ -34,7 +34,7 @@ var/list/mob_hat_cache = list()
 	lawupdate = 0
 	density = 1
 	req_access = list(access_engine, access_robotics)
-	integrated_light_power = 3
+	integrated_light_max_bright = 0.5
 	local_transmit = 1
 	possession_candidate = 1
 	speed = -1
@@ -94,7 +94,7 @@ var/list/mob_hat_cache = list()
 	if(too_many_active_drones())
 		to_chat(src, "<span class='danger'>The maximum number of active drones has been reached..</span>")
 		return 0
-	if(jobban_isbanned(possessor,"Cyborg"))
+	if(jobban_isbanned(possessor,"Robot"))
 		to_chat(usr, "<span class='danger'>You are banned from playing synthetics and cannot spawn as a drone.</span>")
 		return 0
 	if(!possessor.MayRespawn(1,DRONE_SPAWN_DELAY))
@@ -154,14 +154,14 @@ var/list/mob_hat_cache = list()
 /mob/living/silicon/robot/drone/fully_replace_character_name(pickedName as text)
 	// Would prefer to call the grandparent proc but this isn't possible, so..
 	real_name = pickedName
-	name = real_name
+	SetName(real_name)
 
 /mob/living/silicon/robot/drone/updatename()
 	if(controlling_ai)
 		real_name = "remote drone ([controlling_ai.name])"
 	else
 		real_name = "[initial(name)] ([random_id(type,100,999)])"
-	name = real_name
+	SetName(real_name)
 
 /mob/living/silicon/robot/drone/update_icon()
 
@@ -198,10 +198,9 @@ var/list/mob_hat_cache = list()
 	if(user.a_intent == I_HELP && istype(W, /obj/item/clothing/head))
 		if(hat)
 			to_chat(user, "<span class='warning'>\The [src] is already wearing \the [hat].</span>")
-			return
-		user.unEquip(W)
-		wear_hat(W)
-		user.visible_message("<span class='notice'>\The [user] puts \the [W] on \the [src].</span>")
+		else if(user.unEquip(W))
+			wear_hat(W)
+			user.visible_message("<span class='notice'>\The [user] puts \the [W] on \the [src].</span>")
 		return
 	else if(istype(W, /obj/item/borg/upgrade/))
 		to_chat(user, "<span class='danger'>\The [src] is not compatible with \the [W].</span>")
@@ -211,7 +210,7 @@ var/list/mob_hat_cache = list()
 		to_chat(user, "<span class='danger'>\The [src] is hermetically sealed. You can't open the case.</span>")
 		return
 
-	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))
 
 		if(stat == 2)
 

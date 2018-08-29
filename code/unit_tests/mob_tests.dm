@@ -292,40 +292,6 @@ datum/unit_test/mob_damage/unathi/halloss
 	damagetype = PAIN
 
 // =================================================================
-// SpessKahjit aka Tajaran
-// =================================================================
-
-datum/unit_test/mob_damage/tajaran
-	name = "MOB: Tajaran damage check template"
-	mob_type = /mob/living/carbon/human/tajaran
-
-datum/unit_test/mob_damage/tajaran/brute
-	name = "MOB: Tajaran Brute Damage Check"
-	damagetype = BRUTE
-	expected_vulnerability = EXTRA_VULNERABLE
-
-datum/unit_test/mob_damage/tajaran/fire
-	name = "MOB: Tajaran Fire Damage Check"
-	damagetype = BURN
-	expected_vulnerability = EXTRA_VULNERABLE
-
-datum/unit_test/mob_damage/tajaran/tox
-	name = "MOB: Tajaran Toxins Damage Check"
-	damagetype = TOX
-
-datum/unit_test/mob_damage/tajaran/oxy
-	name = "MOB: Tajaran Oxygen Damage Check"
-	damagetype = OXY
-
-datum/unit_test/mob_damage/tajaran/clone
-	name = "MOB: Tajaran Clone Damage Check"
-	damagetype = CLONE
-
-datum/unit_test/mob_damage/tajaran/halloss
-	name = "MOB: Tajaran Halloss Damage Check"
-	damagetype = PAIN
-
-// =================================================================
 // Skrell
 // =================================================================
 
@@ -340,6 +306,7 @@ datum/unit_test/mob_damage/skrell/brute
 datum/unit_test/mob_damage/skrell/fire
 	name = "MOB: Skrell Fire Damage Check"
 	damagetype = BURN
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/tox
 	name = "MOB: Skrell Toxins Damage Check"
@@ -348,6 +315,7 @@ datum/unit_test/mob_damage/skrell/tox
 datum/unit_test/mob_damage/skrell/oxy
 	name = "MOB: Skrell Oxygen Damage Check"
 	damagetype = OXY
+	expected_vulnerability = EXTRA_VULNERABLE
 
 datum/unit_test/mob_damage/skrell/clone
 	name = "MOB: Skrell Clone Damage Check"
@@ -556,7 +524,7 @@ datum/unit_test/species_base_skin/start_test()
 				var/list/paths = S.has_limbs[tag]
 				var/obj/item/organ/external/E = paths["path"]
 				var/list/gender_test = list("")
-				if(initial(E.gendered_icon))
+				if(initial(E.limb_flags) & ORGAN_FLAG_GENDERED_ICON)
 					gender_test = list("_m", "_f")
 				var/icon_name = initial(E.icon_name)
 
@@ -582,3 +550,27 @@ datum/unit_test/species_base_skin/start_test()
 
 	return 1	// return 1 to show we're done and don't want to recheck the result.
 
+
+/datum/unit_test/mob_nullspace
+	name = "MOB: Mob in nullspace shall not cause runtimes"
+	var/list/test_subjects = list()
+	async = 1
+
+/datum/unit_test/mob_nullspace/start_test()
+	// Simply create one of each species type in nullspace
+	for(var/species_name in all_species)
+		var/test_subject = new/mob/living/carbon/human(null, species_name)
+		test_subjects += test_subject
+	return TRUE
+
+/datum/unit_test/mob_nullspace/check_result()
+	for(var/ts in test_subjects)
+		var/mob/living/carbon/human/H = ts
+		if(H.life_tick < 10)
+			return FALSE
+
+	QDEL_NULL_LIST(test_subjects)
+
+	// No failure state, we just rely on the general runtime check to fail the entire build for us
+	pass("Mob nullspace test concluded.")
+	return TRUE

@@ -102,6 +102,11 @@
 	item_cost = 52
 	path = /obj/item/weapon/gun/projectile/magnum_pistol
 
+/datum/uplink_item/item/visible_weapons/beretta
+	name = "9mm Pistol"
+	item_cost = 40
+	path = /obj/item/weapon/gun/projectile/beretta
+
 /datum/uplink_item/item/visible_weapons/detective_revolver
 	name = "Holdout Revolver"
 	item_cost = 38
@@ -118,3 +123,15 @@
 	item_cost = 60
 	antag_costs = list(MODE_MERCENARY = 20)
 	path = /obj/item/weapon/gun/magnetic/railgun/flechette
+
+/datum/uplink_item/item/visible_weapons/railgun // Like a semi-auto AMR
+	name = "Railgun"
+	item_cost = DEFAULT_TELECRYSTAL_AMOUNT
+	antag_costs = list(MODE_MERCENARY = DEFAULT_TELECRYSTAL_AMOUNT - (DEFAULT_TELECRYSTAL_AMOUNT - (DEFAULT_TELECRYSTAL_AMOUNT % 6)) / 6)
+	path = /obj/item/weapon/gun/magnetic/railgun
+
+/datum/uplink_item/item/visible_weapons/railguntcc // Only slightly better than the normal railgun; but cooler looking
+	name = "Advanced Railgun"
+	item_cost = DEFAULT_TELECRYSTAL_AMOUNT + (DEFAULT_TELECRYSTAL_AMOUNT - (DEFAULT_TELECRYSTAL_AMOUNT % 6)) / 6// Only available to traitors if they share TCs.
+	antag_costs = list(MODE_MERCENARY = DEFAULT_TELECRYSTAL_AMOUNT) // This, on the other hand, is to encourage usage specifically by mercs with high budgets.
+	path = /obj/item/weapon/gun/magnetic/railgun/tcc

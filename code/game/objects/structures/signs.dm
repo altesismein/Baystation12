@@ -24,7 +24,7 @@
 	if(isScrewdriver(tool) && !istype(src, /obj/structure/sign/double))
 		to_chat(user, "You unfasten the sign with your [tool.name].")
 		var/obj/item/sign/S = new(src.loc)
-		S.name = name
+		S.SetName(name)
 		S.desc = desc
 		S.icon_state = icon_state
 		S.sign_state = icon_state
@@ -53,7 +53,7 @@
 			if("West")
 				S.pixel_x = -32
 			else return
-		S.name = name
+		S.SetName(name)
 		S.desc = desc
 		S.icon_state = sign_state
 		to_chat(user, "You fasten \the [S] with your [tool].")
@@ -162,6 +162,14 @@
 	name = "\improper NO SMOKING"
 	icon_state = "nosmoking2"
 
+/obj/structure/sign/warning/nosmoking_burned
+	name = "\improper NO SMOKING"
+	icon_state = "nosmoking2_b"
+
+/obj/structure/sign/warning/nosmoking_burned/Initialize()
+	. = ..()
+	desc += " It looks charred."
+
 /obj/structure/sign/warning/smoking
 	name = "\improper SMOKING"
 	icon_state = "smoking"
@@ -172,7 +180,19 @@
 
 /obj/structure/sign/warning/pods
 	name = "\improper ESCAPE PODS"
-	icon_state = "pods"
+	icon_state = "podsnorth"
+
+/obj/structure/sign/warning/pods/south
+	name = "\improper ESCAPE PODS"
+	icon_state = "podssouth"
+
+/obj/structure/sign/warning/pods/east
+	name = "\improper ESCAPE PODS"
+	icon_state = "podseast"
+
+/obj/structure/sign/warning/pods/west
+	name = "\improper ESCAPE PODS"
+	icon_state = "podswest"
 
 /obj/structure/sign/warning/radioactive
 	name = "\improper RADIOACTIVE AREA"
@@ -259,7 +279,7 @@
 
 /obj/structure/sign/warning/science
 	name = "\improper SCIENCE!"
-	icon_state = "science1"
+	icon_state = "science"
 
 /obj/structure/sign/warning/science/anomalous_materials
 	name = "\improper ANOMALOUS MATERIALS"
@@ -270,7 +290,7 @@
 /obj/structure/sign/science_1
 	name = "\improper RESEARCH WING"
 	desc = "A sign labelling the research wing."
-	icon_state = "science1"
+	icon_state = "science"
 
 /obj/structure/sign/science_2
 	name = "\improper RESEARCH"
@@ -305,7 +325,7 @@
 /obj/structure/sign/chemistry
 	name = "\improper CHEMISTRY"
 	desc = "A sign labelling an area containing chemical equipment."
-	icon_state = "chemistry1"
+	icon_state = "chemistry"
 
 /obj/structure/sign/xenoflora
 	name = "\improper XENOFLORA"
@@ -320,7 +340,7 @@
 /obj/structure/sign/hydro
 	name = "\improper HYDROPONICS"
 	desc = "A sign labelling an area as a place where plants are grown."
-	icon_state = "hydro1"
+	icon_state = "hydro"
 
 /obj/structure/sign/hydrostorage
 	name = "\improper HYDROPONICS STORAGE"

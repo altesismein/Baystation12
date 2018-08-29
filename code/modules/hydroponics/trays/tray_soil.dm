@@ -15,8 +15,11 @@
 /obj/machinery/portable_atmospherics/hydroponics/soil/New()
 	..()
 	verbs -= /obj/machinery/portable_atmospherics/hydroponics/verb/close_lid_verb
-	verbs -= /obj/machinery/portable_atmospherics/hydroponics/verb/remove_label
 	verbs -= /obj/machinery/portable_atmospherics/hydroponics/verb/setlight
+
+/obj/machinery/portable_atmospherics/hydroponics/soil/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
 
 // Holder for vine plants.
 // Icons for plants are generated as overlays, so setting it to invisible wouldn't work.
@@ -25,7 +28,10 @@
 	name = "plant"
 	icon = 'icons/obj/seeds.dmi'
 	icon_state = "blank"
-	var/list/connected_zlevels //cached for checking if we someone is obseving us so we should process 
+	var/list/connected_zlevels //cached for checking if we someone is obseving us so we should process
+
+/obj/machinery/portable_atmospherics/hydroponics/soil/is_burnable()
+	return ..() && seed.get_trait(TRAIT_HEAT_TOLERANCE) < 1000
 
 /obj/machinery/portable_atmospherics/hydroponics/soil/invisible/New(var/newloc,var/datum/seed/newseed, var/start_mature)
 	..()

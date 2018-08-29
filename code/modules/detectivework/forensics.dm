@@ -57,21 +57,25 @@ atom/var/var/fingerprintslast = null
 	if(!ignoregloves && ishuman(M))
 		var/mob/living/carbon/human/H = M
 		if (H.gloves && H.gloves.body_parts_covered & HANDS && H.gloves != src)
-			H.gloves.add_fingerprint(M)
-			if(!istype(H.gloves, /obj/item/clothing/gloves/latex))
-				return 0
+			if(istype(H.gloves, /obj/item/clothing/gloves)) //Don't add prints if you are wearing gloves.
+				var/obj/item/clothing/gloves/G = H.gloves
+				if(!G.clipped) //Fingerless gloves leave prints.
+					return 0
 			else if(prob(75))
 				return 0
-
+			H.gloves.add_fingerprint(M)
+	var/additional_chance = 0
+	if(!M.skill_check(SKILL_FORENSICS, SKILL_BASIC))
+		additional_chance = 10
 	// Add the fingerprints
-	add_partial_print(full_print)
+	add_partial_print(full_print, additional_chance)
 	return 1
 
-/atom/proc/add_partial_print(full_print)
+/atom/proc/add_partial_print(full_print, bonus)
 	if(!fingerprints[full_print])
-		fingerprints[full_print] = stars(full_print, rand(0, 20))	//Initial touch, not leaving much evidence the first time.
+		fingerprints[full_print] = stars(full_print, rand(0 + bonus, 20 + bonus))	//Initial touch, not leaving much evidence the first time.
 	else
-		switch(stringpercent(fingerprints[full_print]))		//tells us how many stars are in the current prints.
+		switch(max(stringpercent(fingerprints[full_print]) - bonus,0))		//tells us how many stars are in the current prints.
 			if(28 to 32)
 				if(prob(1))
 					fingerprints[full_print] = full_print 		// You rolled a one buddy.
@@ -164,18 +168,25 @@ atom/proc/add_fibers(mob/living/carbon/human/M)
 	if(E)
 		return E.get_fingerprint()
 
-/obj/item/organ/external/proc/get_fingerprint()
-	return
 
-/obj/item/organ/external/arm/get_fingerprint()
-	for(var/obj/item/organ/external/hand/H in children)
-		return H.get_fingerprint()
 
-/obj/item/organ/external/hand/get_fingerprint()
-	if(dna && !is_stump())
-		return md5(dna.uni_identity)
+//on examination get hints of evidence
+/mob/examinate(atom/A as mob|obj|turf in view())
+	if(..())
+		return 1 //I'll admit I am just imitating examine.dm
 
-/obj/item/organ/external/afterattack(atom/A, mob/user, proximity)
-	..()
-	if(proximity && get_fingerprint())
-		A.add_partial_print(get_fingerprint())
+
+	//Detective is on the case
+	if(get_skill_value(SKILL_FORENSICS) >= SKILL_EXPERT && get_dist(src, A) <= (get_skill_value(SKILL_FORENSICS) - SKILL_ADEPT))
+		if(A.suit_fibers && A.suit_fibers.len > 0)
+			to_chat(src, "<span class='notice'>You notice some fibers embedded in \the [A]</span>")
+		if(A.fingerprints && A.fingerprints.len > 0)
+			to_chat(src, "<span class='notice'>You notice a partial print on \the [A]</span>")
+		var/obj/item/clothing/O = A
+		if(istype(O) && O.gunshot_residue)
+			to_chat(src, "<span class='notice'>You notice a faint acrid smell coming from \the [A]</span>")
+		//Noticing wiped blood is a bit harder
+		if((get_skill_value(SKILL_FORENSICS) >= SKILL_PROF) && A.blood_DNA)
+			to_chat(src, "<span class='warning'>You notice faint blood traces on \The [A]</span>")
+
+

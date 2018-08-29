@@ -88,6 +88,10 @@
 	name = "Fourth Deck Starboard Maintenance"
 	icon_state = "smaint"
 
+/area/maintenance/fourthdeck/port
+	name = "Fourth Deck Port Maintenance"
+	icon_state = "pmaint"
+
 /area/teleporter/fourthdeck
 	name = "\improper Fourth Deck Teleporter"
 	icon_state = "teleporter"
@@ -143,10 +147,17 @@
 /area/maintenance/substation/thirddeck
 	name = "Third Deck Substation"
 
+
+/area/crew_quarters/safe_room
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
+
 /area/crew_quarters/safe_room/thirddeck
 	name = "\improper Third Deck Safe Room"
-	area_flags = AREA_FLAG_RAD_SHIELDED
 
+
+/area/crew_quarters/laundry
+	name = "\improper Laundry Room"
+	icon_state = "Sleep"
 
 //Second Deck (Z-3)
 /area/maintenance/seconddeck
@@ -190,7 +201,10 @@
 
 /area/crew_quarters/safe_room/seconddeck
 	name = "\improper Second Deck Safe Room"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+
+/area/maintenance/bluespace
+	name = "Bluespace Drive"
+	icon_state = "engineering"
 
 
 //First Deck (Z-4)
@@ -240,7 +254,6 @@
 
 /area/crew_quarters/safe_room/firstdeck
 	name = "\improper First Deck Safe Room"
-	area_flags = AREA_FLAG_RAD_SHIELDED
 
 /area/maintenance/substation/firstdeck // First Deck (Z-4)
 	name = "First Deck Substation"
@@ -279,7 +292,6 @@
 
 /area/crew_quarters/safe_room/bridge
 	name = "\improper Bridge Safe Room"
-	area_flags = AREA_FLAG_RAD_SHIELDED
 
 /area/bridge/storage
 	name = "\improper Bridge Storage Room"
@@ -292,52 +304,52 @@
 //torch large pods
 /area/shuttle/escape_pod6/station
 	name = "Escape Pod One"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod7/station
 	name = "Escape Pod Two"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod8/station
 	name = "Escape Pod Three"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod9/station
 	name = "Escape Pod Four"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod10/station
 	name = "Escape Pod Five"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod11/station
 	name = "Escape Pod Six"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 //torch small pods
 /area/shuttle/escape_pod12/station
 	name = "Escape Pod Seven"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod13/station
 	name = "Escape Pod Eight"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod14/station
 	name = "Escape Pod Nine"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod15/station
 	name = "Escape Pod Ten"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod16/station
 	name = "Escape Pod Eleven"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/escape_pod17/station
 	name = "Escape Pod Twelve"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 //Charon
 
@@ -345,7 +357,7 @@
 	name = "\improper Charon"
 	icon_state = "shuttlered"
 	base_turf = /turf/simulated/floor/plating
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/exploration_shuttle/cockpit
 	name = "\improper Charon - Cockpit"
@@ -362,13 +374,32 @@
 
 //Aquila
 
-/area/aquila_hangar/start
+/area/aquila
 	name = "\improper SEV Aquila"
 	icon_state = "shuttlered"
 	base_turf = /turf/simulated/floor/reinforced/airless
 	requires_power = 1
 	dynamic_lighting = 1
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
+
+/area/aquila/cockpit
+	name = "\improper SEV Aquila - Cockpit"
+/area/aquila/maintenance
+	name = "\improper SEV Aquila - Maintenance"
+/area/aquila/storage
+	name = "\improper SEV Aquila - Storage"
+/area/aquila/secure_storage
+	name = "\improper SEV Aquila - Secure Storage"
+/area/aquila/mess
+	name = "\improper SEV Aquila - Mess Hall"
+/area/aquila/passenger
+	name = "\improper SEV Aquila - Passenger Compartment"
+/area/aquila/medical
+	name = "\improper SEV Aquila - Medical"
+/area/aquila/head
+	name = "\improper SEV Aquila - Head"
+/area/aquila/airlock
+	name = "\improper SEV Aquila - Airlock Compartment"
 
 //Guppy
 
@@ -377,7 +408,7 @@
 	icon_state = "shuttlered"
 	requires_power = 1
 	dynamic_lighting = 1
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 
 //Petrov
@@ -386,7 +417,7 @@
 	name = "\improper NSV Petrov"
 	requires_power = 1
 	dynamic_lighting = 1
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/shuttle/petrov/ship
 	icon_state = "shuttlered"
@@ -407,7 +438,7 @@
 	icon_state = "shuttle"
 	requires_power = 0
 	dynamic_lighting = 1
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/turbolift/start
 	name = "\improper Turbolift Start"
@@ -443,7 +474,7 @@
 	icon_state = "green"
 	requires_power = 0
 	dynamic_lighting = 1
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/ninja_dojo/dojo
 	name = "\improper Clan Dojo"
@@ -472,7 +503,7 @@
 	name = "\improper Mercenary Forward Operating Base"
 	icon_state = "yellow"
 	requires_power = 0
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 //Skipjack
 
@@ -488,7 +519,7 @@
 	icon_state = "yellow"
 	requires_power = 0
 	dynamic_lighting = 1
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/rescue_base/base
 	name = "\improper Barracks"
@@ -511,7 +542,7 @@
 	name = "lift (upper deck)"
 	lift_floor_label = "Deck 1"
 	lift_floor_name = "Operations Deck"
-	lift_announce_str = "Arriving at Operations Deck: Infirmary. Research Wing. Auxiliary Cryogenic Storage. Emergency Armory. Diplomatic Quarters. Captain's Mess. Pathfinder's Office."
+	lift_announce_str = "Arriving at Operations Deck: Infirmary. Security Wing. Research Wing. Auxiliary Cryogenic Storage. Emergency Armory."
 
 /area/turbolift/torch_second
 	name = "lift (maintenance)"
@@ -523,23 +554,23 @@
 	name = "lift (second deck)"
 	lift_floor_label = "Deck 3"
 	lift_floor_name = "Habitation Deck"
-	lift_announce_str = "Arriving at Habitation Deck: EVA. Security Wing. Telecommunications. Mess Hall. Hydroponics. Cryogenic Storage. Holodeck."
+	lift_announce_str = "Arriving at Habitation Deck: EVA. Telecommunications. Mess Hall. Officer's Mess. Diplomatic Quarters. Hydroponics. Cryogenic Storage. Holodeck. Gym."
 
 /area/turbolift/torch_ground
 	name = "lift (lower deck)"
 	lift_floor_label = "Deck 4"
 	lift_floor_name = "Hangar Deck"
-	lift_announce_str = "Arriving at Hangar Deck: Shuttle Docks. Cargo Storage. Main Hangar. Supply Office. Expedition Preparation. Mineral Processing."
+	lift_announce_str = "Arriving at Hangar Deck: Shuttle Docks. Pathfinder's Office. Cargo Storage. Main Hangar. Supply Office. Expedition Preparation. Mineral Processing."
 	base_turf = /turf/simulated/floor
 
 // Command
 /area/command/conference
-	name = "Conference Room"
+	name = "Briefing Room"
 	icon_state = "head_quarters"
 	sound_env = MEDIUM_SOFTFLOOR
 
 /area/command/captainmess
-	name = "Captain's Mess"
+	name = "Officer's Mess"
 	icon_state = "bar"
 	sound_env = MEDIUM_SOFTFLOOR
 
@@ -636,6 +667,10 @@
 	name = "\improper Vacant Cabins"
 	icon_state = "crew_quarters"
 
+/area/vacant/mess
+	name = "\improper Old Mess"
+	icon_state = "bar"
+
 /area/vacant/chapel
 	name = "\improper Unused Chapel"
 	icon_state = "chapel"
@@ -656,14 +691,9 @@
 	name = "\improper Prototype Fusion Reactor Chamber"
 	icon_state = "firingrange"
 
-
 /area/vacant/cargo
 	name = "\improper Requisitions Office"
 	icon_state = "quart"
-
-/area/vacant/mess
-	name = "\improper Officer's Mess"
-	icon_state = "bar"
 
 /area/vacant/missile
 	name = "\improper Third Deck Port Missile Pod"
@@ -737,6 +767,10 @@
 	icon_state = "hangar"
 	sound_env = LARGE_ENCLOSED
 
+/area/quartermaster/unused
+	name = "\improper Ready Room"
+	icon_state = "auxstorage"
+
 // Research
 /area/rnd/canister
 	name = "\improper Canister Storage"
@@ -765,7 +799,7 @@
 /area/rnd/blanks
 	name = "\improper Aux Custodial Supplies"
 	icon_state = "decontamination"
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 // Crew areas
 /area/crew_quarters/bar
@@ -801,6 +835,10 @@
 	name = "\improper Galley Cold Storage"
 	icon_state = "kitchen"
 
+/area/crew_quarters/commissary
+	name = "\improper Commissary"
+	icon_state = "crew_quarters"
+
 /area/crew_quarters/lounge
 	name = "\improper Lounge"
 	icon_state = "crew_quarters"
@@ -810,13 +848,13 @@
 	name = "\improper Safe Room"
 	icon_state = "crew_quarters"
 	sound_env = SMALL_ENCLOSED
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/crew_quarters/sleep/bunk
 	name = "\improper Bunk Room"
 	icon_state = "Sleep"
 	sound_env = SMALL_SOFTFLOOR
-	area_flags = AREA_FLAG_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED | AREA_FLAG_ION_SHIELDED
 
 /area/crew_quarters/sleep/cryo/aux
 	name = "\improper Auxiliary Cryogenic Storage"
@@ -862,11 +900,19 @@
 	icon_state = "security"
 
 /area/security/bridgecheck
-	name = "\improper Bridge Security Checkpoint"
+	name = "\improper Bridge Deck Security Checkpoint"
 	icon_state = "checkpoint"
 
 /area/security/opscheck
-	name = "\improper First Deck Security Office"
+	name = "\improper First Deck Security Checkpoint"
+	icon_state = "checkpoint"
+
+/area/security/habcheck
+	name = "\improper Third Deck Security Checkpoint"
+	icon_state = "checkpoint"
+
+/area/security/hangcheck
+	name = "\improper Fourth Deck Security Checkpoint"
 	icon_state = "checkpoint"
 
 // AI
@@ -994,6 +1040,10 @@
 	icon_state = "bridge"
 	ambience = list()
 	sound_env = MEDIUM_SOFTFLOOR
+
+/area/bridge/disciplinary_board_room
+	name = "\improper Disciplinary Board Room"
+	sound_env = SMALL_ENCLOSED
 
 /area/crew_quarters/heads
 	icon_state = "head_quarters"
@@ -1149,6 +1199,14 @@
 	has_gravity = 0
 	sound_env = SPACE
 
+/area/holodeck/source_cafe
+	name = "\improper Holodeck - Cafe"
+	sound_env = PLAIN
+
+/area/holodeck/source_volleyball
+	name = "\improper Holodeck - Volleyball"
+	sound_env = PLAIN
+
 // Engineering
 
 /area/engineering/atmos/storage
@@ -1222,6 +1280,10 @@
 	name = "\improper Operating Theatre"
 	icon_state = "surgery"
 
+/area/medical/autopsy
+	name = "\improper Autopsy"
+	icon_state = "autopsy"
+
 // Research
 /area/assembly/chargebay
 	name = "\improper Mech Bay"
@@ -1288,10 +1350,6 @@
 /area/security/armoury
 	name = "\improper Security - Armory"
 	icon_state = "Warden"
-
-/area/security/checkpoint2
-	name = "\improper Security - Checkpoint"
-	icon_state = "checkpoint1"
 
 /area/security/detectives_office
 	name = "\improper Security - Forensic Office"

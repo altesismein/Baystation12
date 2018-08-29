@@ -39,7 +39,7 @@
 	var/spawn_object = null
 
 /obj/random/single/spawn_choices()
-	return list(ispath(spawn_object) ? spawn_object : text2path(spawn_object))
+	return list(spawn_object)
 
 /obj/random/tool
 	name = "random tool"
@@ -117,7 +117,7 @@
 /obj/random/tech_supply/spawn_choices()
 	return list(/obj/random/powercell = 3,
 				/obj/random/technology_scanner = 2,
-				/obj/item/weapon/packageWrap = 1,
+				/obj/item/stack/package_wrap/twenty_five = 1,
 				/obj/item/weapon/hand_labeler = 1,
 				/obj/random/bomb_supply = 2,
 				/obj/item/weapon/extinguisher = 1,
@@ -170,7 +170,12 @@
 				/obj/item/bodybag/cryobag = 1,
 				/obj/item/weapon/reagent_containers/hypospray/autoinjector = 3,
 				/obj/item/weapon/storage/pill_bottle/kelotane = 2,
-				/obj/item/weapon/storage/pill_bottle/antitox = 2)
+				/obj/item/weapon/storage/pill_bottle/antitox = 2,
+				/obj/item/weapon/storage/med_pouch/trauma = 2,
+				/obj/item/weapon/storage/med_pouch/burn = 2,
+				/obj/item/weapon/storage/med_pouch/toxin = 2,
+				/obj/item/weapon/storage/med_pouch/radiation = 2,
+				/obj/item/weapon/storage/med_pouch/oxyloss = 2)
 
 /obj/random/firstaid
 	name = "Random First Aid Kit"
@@ -180,8 +185,10 @@
 
 /obj/random/firstaid/spawn_choices()
 	return list(/obj/item/weapon/storage/firstaid/regular = 4,
+				/obj/item/weapon/storage/firstaid/trauma = 3,
 				/obj/item/weapon/storage/firstaid/toxin = 3,
 				/obj/item/weapon/storage/firstaid/o2 = 3,
+				/obj/item/weapon/storage/firstaid/stab = 2,
 				/obj/item/weapon/storage/firstaid/adv = 2,
 				/obj/item/weapon/storage/firstaid/combat = 1,
 				/obj/item/weapon/storage/firstaid/empty = 2,
@@ -268,6 +275,7 @@
 				/obj/item/weapon/gun/projectile/automatic/c20r = 2,
 				/obj/item/weapon/gun/projectile/automatic/sts35 = 2,
 				/obj/item/weapon/gun/projectile/automatic/z8 = 2,
+				/obj/item/weapon/gun/projectile/beretta = 4,
 				/obj/item/weapon/gun/projectile/colt = 4,
 				/obj/item/weapon/gun/projectile/sec = 4,
 				/obj/item/weapon/gun/projectile/sec/wood = 3,
@@ -291,6 +299,7 @@
 /obj/random/handgun/spawn_choices()
 	return list(/obj/item/weapon/gun/projectile/sec = 3,
 				/obj/item/weapon/gun/energy/gun = 2,
+				/obj/item/weapon/gun/projectile/beretta = 2,
 				/obj/item/weapon/gun/projectile/colt = 2,
 				/obj/item/weapon/gun/projectile/pistol = 2,
 				/obj/item/weapon/gun/energy/retro = 1,
@@ -424,7 +433,6 @@ obj/random/closet //A couple of random closets to spice up maint
 obj/random/closet/spawn_choices()
 	return list(/obj/structure/closet,
 				/obj/structure/closet/firecloset,
-				/obj/structure/closet/firecloset/full,
 				/obj/structure/closet/emcloset,
 				/obj/structure/closet/jcloset,
 				/obj/structure/closet/athletic_mixed,
@@ -451,13 +459,13 @@ obj/random/closet/spawn_choices()
 	icon_state = "coin"
 
 /obj/random/coin/spawn_choices()
-	return list(/obj/item/weapon/coin/gold = 3,
-				/obj/item/weapon/coin/silver = 4,
-				/obj/item/weapon/coin/diamond = 2,
-				/obj/item/weapon/coin/iron = 4,
-				/obj/item/weapon/coin/uranium = 3,
-				/obj/item/weapon/coin/platinum = 1,
-				/obj/item/weapon/coin/phoron = 1)
+	return list(/obj/item/weapon/material/coin/gold = 3,
+				/obj/item/weapon/material/coin/silver = 4,
+				/obj/item/weapon/material/coin/diamond = 2,
+				/obj/item/weapon/material/coin/iron = 4,
+				/obj/item/weapon/material/coin/uranium = 3,
+				/obj/item/weapon/material/coin/platinum = 1,
+				/obj/item/weapon/material/coin/phoron = 1)
 
 /obj/random/toy
 	name = "random toy"
@@ -601,11 +609,13 @@ obj/random/obstruction/spawn_choices()
 				/obj/item/weapon/handcuffs,
 				/obj/item/weapon/camera_assembly,
 				/obj/item/device/camera,
-				/obj/item/device/pda,
+				/obj/item/modular_computer/pda,
 				/obj/item/weapon/card/emag_broken,
 				/obj/item/device/radio/headset,
-				/obj/item/device/flashlight/glowstick/yellow,
-				/obj/item/device/flashlight/glowstick/orange)
+				/obj/item/device/flashlight/flare/glowstick/yellow,
+				/obj/item/device/flashlight/flare/glowstick/orange,
+				/obj/item/weapon/grenade/light,
+				/obj/item/device/oxycandle)
 
 /obj/random/smokes
 	name = "random smokeable"
@@ -706,8 +716,8 @@ obj/random/obstruction/spawn_choices()
 				/obj/item/weapon/storage/belt/utility/full = 2,
 				/obj/item/weapon/storage/belt/medical/emt = 2,
 				/obj/item/weapon/storage/belt/medical = 2,
-				/obj/item/weapon/storage/belt/security = 2,
-				/obj/item/weapon/storage/belt/security/tactical = 1)
+				/obj/item/weapon/storage/belt/holster/security = 2,
+				/obj/item/weapon/storage/belt/holster/security/tactical = 1)
 
 /obj/random/shoes
 	name = "random footwear"
@@ -853,10 +863,10 @@ obj/random/obstruction/spawn_choices()
 				/obj/item/clothing/accessory/storage/brown_vest = 2,
 				/obj/item/clothing/accessory/storage/white_vest = 2,
 				/obj/item/clothing/accessory/storage/bandolier = 1,
-				/obj/item/clothing/accessory/holster/thigh = 1,
-				/obj/item/clothing/accessory/holster/hip = 1,
-				/obj/item/clothing/accessory/holster/waist = 1,
-				/obj/item/clothing/accessory/holster/armpit = 1,
+				/obj/item/clothing/accessory/storage/holster/thigh = 1,
+				/obj/item/clothing/accessory/storage/holster/hip = 1,
+				/obj/item/clothing/accessory/storage/holster/waist = 1,
+				/obj/item/clothing/accessory/storage/holster/armpit = 1,
 				/obj/item/clothing/accessory/kneepads = 3,
 				/obj/item/clothing/accessory/stethoscope = 2)
 

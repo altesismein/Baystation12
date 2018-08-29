@@ -22,7 +22,7 @@
 			return
 		if(length(tmp_label) > 10)
 			to_chat(user, "<span class='notice'>The label can be at most 10 characters long.</span>")
-		else 
+		else
 			if(length(tmp_label))
 				to_chat(user, "<span class='notice'>You set the label to \"[tmp_label]\".</span>")
 				label_text = tmp_label
@@ -32,7 +32,7 @@
 				label_text = null
 				on_reagent_change()
 		return
-		
+
 
 
 /obj/item/weapon/reagent_containers/food/condiment/attack_self(var/mob/user as mob)
@@ -75,56 +75,56 @@
 	if(reagents.reagent_list.len > 0)
 		switch(reagents.get_master_reagent_type())
 			if(/datum/reagent/nutriment/ketchup)
-				name = "Ketchup"
+				name = "ketchup"
 				desc = "You feel more American already."
 				icon_state = "ketchup"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/nutriment/barbecue)
-				name = "Barbecue Sauce"
+				name = "barbecue sauce"
 				desc = "Barbecue sauce, it's labeled 'sweet and spicy'"
 				icon_state = "barbecue"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/capsaicin)
-				name = "Hotsauce"
+				name = "hotsauce"
 				desc = "You can almost TASTE the stomach ulcers now!"
 				icon_state = "hotsauce"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/enzyme)
-				name = "Universal Enzyme"
+				name = "universal enzyme"
 				desc = "Used in cooking various dishes."
 				icon_state = "enzyme"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/nutriment/soysauce)
-				name = "Soy Sauce"
-				desc = "A salty soy-based flavoring."
+				name = "soy sauce"
+				desc = "A dark, salty, savoury flavoring."
 				icon_state = "soysauce"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/frostoil)
-				name = "Coldsauce"
+				name = "coldsauce"
 				desc = "Leaves the tongue numb in its passage."
 				icon_state = "coldsauce"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/sodiumchloride)
-				name = "Salt Shaker"
+				name = "salt shaker"
 				desc = "Salt. From space oceans, presumably."
 				icon_state = "saltshaker"
 				center_of_mass = "x=16;y=10"
 			if(/datum/reagent/blackpepper)
-				name = "Pepper Mill"
+				name = "pepper mill"
 				desc = "Often used to flavor food or make people sneeze."
 				icon_state = "peppermillsmall"
 				center_of_mass = "x=16;y=10"
 			if(/datum/reagent/nutriment/cornoil)
-				name = "Corn Oil"
+				name = "corn oil"
 				desc = "A delicious oil used in cooking. Made from corn."
 				icon_state = "oliveoil"
 				center_of_mass = "x=16;y=6"
 			if(/datum/reagent/sugar)
-				name = "Sugar"
+				name = "sugar"
 				desc = "Tastey space sugar!"
 				center_of_mass = "x=16;y=6"
 			else
-				name = "Misc Condiment Bottle"
+				name = "unlabelled condiment bottle"
 				if (reagents.reagent_list.len==1)
 					desc = "Looks like it is [reagents.get_master_reagent_name()], but you are not sure."
 				else
@@ -133,28 +133,28 @@
 				center_of_mass = "x=16;y=6"
 	else
 		icon_state = "emptycondiment"
-		name = "Condiment Bottle"
+		name = "condiment bottle"
 		desc = "An empty condiment bottle."
 		center_of_mass = "x=16;y=6"
 	if(label_text)
 		name = addtext(name," ([label_text])")
-	
+
 	return
 
 /obj/item/weapon/reagent_containers/food/condiment/enzyme
-	name = "Universal Enzyme"
+	name = "universal enzyme"
 	desc = "Used in cooking various dishes."
 	icon_state = "enzyme"
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/enzyme/New()
 	. = ..()
 	reagents.add_reagent(/datum/reagent/enzyme, 50)
 
 /obj/item/weapon/reagent_containers/food/condiment/barbecue
-	name = "Barbecue Sauce"
+	name = "barbecue sauce"
 	desc = "Barbecue sauce, it's labeled 'sweet and spicy'"
 	icon_state = "barbecue"
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/barbecue/New()
 	. = ..()
 	reagents.add_reagent(/datum/reagent/nutriment/barbecue, 50)
@@ -176,7 +176,7 @@
 	desc = "Salt. From space oceans, presumably."
 	icon_state = "saltshakersmall"
 	center_of_mass = "x=16;y=9"
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/small/saltshaker/New()
 	..()
 	reagents.add_reagent(/datum/reagent/sodiumchloride, 20)
@@ -186,7 +186,7 @@
 	desc = "Often used to flavor food or make people sneeze."
 	icon_state = "peppermillsmall"
 	center_of_mass = "x=16;y=8"
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/small/peppermill/New()
 	..()
 	reagents.add_reagent(/datum/reagent/blackpepper, 20)
@@ -196,10 +196,10 @@
 	desc = "Sweetness in a bottle"
 	icon_state = "sugarsmall"
 	center_of_mass = "x=17;y=9"
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/small/sugar/New()
 	. = ..()
-	reagents.add_reagent(/datum/reagent/sugar, 20)
+	reagents.add_reagent(/datum/reagent/sugar, 30)
 
 /obj/item/weapon/reagent_containers/food/condiment/flour
 	name = "flour sack"
@@ -208,10 +208,52 @@
 	icon_state = "flour"
 	item_state = "flour"
 	randpixel = 10
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/flour/on_reagent_change()
 	return
-	
+
 /obj/item/weapon/reagent_containers/food/condiment/flour/New()
 	..()
-	reagents.add_reagent(/datum/reagent/nutriment/flour, 30)
+	reagents.add_reagent(/datum/reagent/nutriment/flour, 50)
+
+/obj/item/weapon/reagent_containers/food/condiment/salt
+	name = "big bag of salt"
+	desc = "A nonsensically large bag of salt. Carefully refined from countless shifts."
+	icon = 'icons/obj/food.dmi'
+	icon_state = "salt"
+	item_state = "flour"
+	randpixel = 10
+	volume = 500
+	w_class = ITEM_SIZE_LARGE
+
+/obj/item/weapon/reagent_containers/food/condiment/salt/on_reagent_change()
+	return
+
+/obj/item/weapon/reagent_containers/food/condiment/salt/New()
+	..()
+	reagents.add_reagent(/datum/reagent/sodiumchloride, 500)
+
+
+/obj/item/weapon/reagent_containers/food/condiment/mint
+	name = "mint essential oil"
+	desc = "A small bottle of the essential oil of some kind of mint plant."
+	icon = 'icons/obj/food.dmi'
+	icon_state = "coldsauce"
+
+/obj/item/weapon/reagent_containers/food/condiment/mint/on_reagent_change()
+	return
+
+/obj/item/weapon/reagent_containers/food/condiment/mint/New()
+	..()
+	reagents.add_reagent(/datum/reagent/nutriment/mint, 15)
+
+/obj/item/weapon/reagent_containers/food/condiment/soysauce
+	name = "soy sauce"
+	desc = "A dark, salty, savoury flavoring."
+	icon_state = "soysauce"
+	amount_per_transfer_from_this = 1
+	volume = 20
+
+/obj/item/weapon/reagent_containers/food/condiment/soysauce/New()
+	..()
+	reagents.add_reagent(/datum/reagent/nutriment/soysauce, 20)

@@ -2,6 +2,7 @@
 
 	name = "binoculars"
 	desc = "A pair of binoculars."
+	zoomdevicename = "eyepieces"
 	icon_state = "binoculars"
 
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
@@ -15,4 +16,7 @@
 
 
 /obj/item/device/binoculars/attack_self(mob/user)
-	zoom(user)
+	if(zoom)
+		unzoom(user)
+	else
+		zoom(user)

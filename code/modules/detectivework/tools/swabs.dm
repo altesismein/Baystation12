@@ -28,7 +28,7 @@
 		to_chat(user, "<span class='warning'>They don't seem to have DNA!</span>")
 		return
 
-	if(user != H && H.a_intent != I_HELP && !H.lying)
+	if(user != H && (H.a_intent != I_HELP && !H.lying && !H.incapacitated(INCAPACITATION_DEFAULT)))
 		user.visible_message("<span class='danger'>\The [user] tries to take a swab sample from \the [H], but they move away.</span>")
 		return
 
@@ -54,6 +54,9 @@
 				has_hand = 1
 		if(!has_hand)
 			to_chat(user, "<span class='warning'>They don't have any hands.</span>")
+			return
+		if(H.gloves)
+			afterattack(H.gloves, user, 1) //Lazy but this would work
 			return
 		user.visible_message("[user] swabs [H]'s palm for a sample.")
 		sample_type = "GSR"
@@ -114,7 +117,7 @@
 		set_used(sample_type, A)
 
 /obj/item/weapon/forensics/swab/proc/set_used(var/sample_str, var/atom/source)
-	name = "[initial(name)] ([sample_str] - [source])"
+	SetName("[initial(name)] ([sample_str] - [source])")
 	desc = "[initial(desc)] The label on the vial reads 'Sample of [sample_str] from [source].'."
 	icon_state = "swab_used"
 	used = 1

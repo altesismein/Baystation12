@@ -442,8 +442,13 @@
 	required_reagents = list(/datum/reagent/tramadol/oxycodone = 1, /datum/reagent/dylovene = 1)
 	result_amount = 2
 
-/* Solidification */
+/datum/chemical_reaction/methyl_bromide
+	name = "Methyl Bromide"
+	required_reagents = list(/datum/reagent/toxin/bromide = 1, /datum/reagent/ethanol = 1, /datum/reagent/hydrazine = 1)
+	result_amount = 3
+	result = /datum/reagent/toxin/methyl_bromide
 
+/* Solidification */
 /datum/chemical_reaction/phoronsolidification
 	name = "Solid Phoron"
 	result = null
@@ -543,18 +548,29 @@
 
 	holder.clear_reagents()
 
-/datum/chemical_reaction/napalm
-	name = "Napalm"
+/datum/chemical_reaction/phlogiston
+	name = "Phlogiston"
 	result = null
 	required_reagents = list(/datum/reagent/aluminum = 1, /datum/reagent/toxin/phoron = 1, /datum/reagent/acid = 1 )
 	result_amount = 1
 
-/datum/chemical_reaction/napalm/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/phlogiston/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/turf/location = get_turf(holder.my_atom.loc)
 	for(var/turf/simulated/floor/target_tile in range(0,location))
 		target_tile.assume_gas(/datum/reagent/toxin/phoron, created_volume, 400+T0C)
 		spawn (0) target_tile.hotspot_expose(700, 400)
-	holder.del_reagent("napalm")
+
+/datum/chemical_reaction/napalm
+	name = "Napalm"
+	result = /datum/reagent/napalm
+	required_reagents = list(/datum/reagent/aluminum = 1, /datum/reagent/acid = 1, /datum/reagent/glycerol = 1 ) //because bananas grow on palms and palm oil is used to make napalm. =/= logic
+	result_amount = 2
+
+/datum/chemical_reaction/napalmb
+	name = "Napalm B"
+	result = /datum/reagent/napalm/b
+	required_reagents = list(/datum/reagent/toxin/plasticide = 1, /datum/reagent/fuel = 1 )
+	result_amount = 2
 
 /datum/chemical_reaction/chemsmoke
 	name = "Chemsmoke"
@@ -851,7 +867,7 @@
 	T.Uses--
 	if(T.Uses <= 0)
 		T.visible_message("\icon[T]<span class='notice'>\The [T]'s power is consumed in the reaction.</span>")
-		T.name = "used slime extract"
+		T.SetName("used slime extract")
 		T.desc = "This extract has been used up."
 
 //Grey
@@ -1275,6 +1291,12 @@
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/reagent_containers/food/snacks/chocolatebar(location)
 
+/datum/chemical_reaction/chocolate_milk
+	name = "Chocolate Milk"
+	result = /datum/reagent/drink/milk/chocolate
+	required_reagents = list(/datum/reagent/drink/milk = 5, /datum/reagent/nutriment/coco = 1)
+	result_amount = 5
+
 /datum/chemical_reaction/hot_coco
 	name = "Hot Coco"
 	result = /datum/reagent/drink/hot_coco
@@ -1296,7 +1318,7 @@
 /datum/chemical_reaction/barbecue
 	name = "Barbecue Sauce"
 	result = /datum/reagent/nutriment/barbecue
-	required_reagents = list(/datum/reagent/nutriment/ketchup = 2, "pepper" = 1, "salt" = 1)
+	required_reagents = list(/datum/reagent/nutriment/ketchup = 2, /datum/reagent/blackpepper = 1, /datum/reagent/sodiumchloride = 1)
 	result_amount = 4
 
 /datum/chemical_reaction/garlicsauce
@@ -1317,27 +1339,58 @@
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/reagent_containers/food/snacks/sliceable/cheesewheel(location)
 
-/datum/chemical_reaction/meatball
-	name = "Meatball"
+/datum/chemical_reaction/rawmeatball
+	name = "Raw Meatball"
 	result = null
 	required_reagents = list(/datum/reagent/nutriment/protein = 3, /datum/reagent/nutriment/flour = 5)
 	result_amount = 3
 
-/datum/chemical_reaction/meatball/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/rawmeatball/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
-		new /obj/item/weapon/reagent_containers/food/snacks/meatball(location)
+		new /obj/item/weapon/reagent_containers/food/snacks/rawmeatball(location)
 
 /datum/chemical_reaction/dough
 	name = "Dough"
 	result = null
-	required_reagents = list(/datum/reagent/nutriment/protein/egg = 3, /datum/reagent/nutriment/flour = 10, /datum/reagent/water = 5)
+	required_reagents = list(/datum/reagent/nutriment/protein/egg = 3, /datum/reagent/nutriment/flour = 10, /datum/reagent/water = 10)
 	result_amount = 1
 
 /datum/chemical_reaction/dough/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/reagent_containers/food/snacks/dough(location)
+
+/datum/chemical_reaction/soydough
+	name = "Soy dough"
+	result = null
+	required_reagents = list(/datum/reagent/nutriment/softtofu = 3, /datum/reagent/nutriment/flour = 10, /datum/reagent/water = 10)
+	result_amount = 1
+
+/datum/chemical_reaction/soydough/on_reaction(var/datum/reagents/holder, var/created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i = 1, i <= created_volume, i++)
+		new /obj/item/weapon/reagent_containers/food/snacks/dough(location)
+
+//batter reaction as food precursor, for things that don't use pliable dough precursor.
+
+/datum/chemical_reaction/batter
+	name = "Batter"
+	result = /datum/reagent/nutriment/batter
+	required_reagents = list(/datum/reagent/nutriment/protein/egg = 3, /datum/reagent/nutriment/flour = 5, /datum/reagent/drink/milk = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/cakebatter
+	name = "Cake Batter"
+	result = /datum/reagent/nutriment/batter/cakebatter
+	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/nutriment/batter = 2)
+	result_amount = 3
+
+/datum/chemical_reaction/soybatter
+	name = "Vegan Batter"
+	result = /datum/reagent/nutriment/batter
+	required_reagents = list(/datum/reagent/nutriment/softtofu = 3, /datum/reagent/nutriment/flour = 5, /datum/reagent/drink/milk = 5)
+	result_amount = 10
 
 /datum/chemical_reaction/syntiflesh
 	name = "Syntiflesh"
@@ -1385,8 +1438,14 @@
 /datum/chemical_reaction/icetea
 	name = "Iced Tea"
 	result = /datum/reagent/drink/tea/icetea
-	required_reagents = list(/datum/reagent/drink/ice = 1, /datum/reagent/drink/tea = 2)
+	required_reagents = list(/datum/reagent/drink/ice = 1, /datum/reagent/drink/tea = 2, /datum/reagent/sugar = 1)
 	result_amount = 3
+
+/datum/chemical_reaction/sweettea
+	name = "Sweet Tea"
+	result = /datum/reagent/drink/tea/icetea
+	required_reagents = list(/datum/chemical_reaction/icetea = 3, /datum/reagent/sugar = 1)
+	result_amount = 4
 
 /datum/chemical_reaction/icecoffee
 	name = "Iced Coffee"
@@ -1453,6 +1512,13 @@
 	name = "Vodka"
 	result = /datum/reagent/ethanol/vodka
 	required_reagents = list(/datum/reagent/drink/juice/potato = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/vodka2
+	name = "Vodka"
+	result = /datum/reagent/ethanol/vodka
+	required_reagents = list(/datum/reagent/drink/juice/turnip = 10)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 

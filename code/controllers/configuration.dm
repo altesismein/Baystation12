@@ -31,10 +31,11 @@ var/list/gamemode_cache = list()
 	var/vote_delay = 6000				// minimum time between voting sessions (deciseconds, 10 minute default)
 	var/vote_period = 600				// length of voting period (deciseconds, default 1 minute)
 	var/vote_autotransfer_initial = 108000 // Length of time before the first autotransfer vote is called
-	var/vote_autotransfer_interval = 36000 // length of time before next sequential autotransfer vote
+	var/vote_autotransfer_interval = 18000 // length of time before next sequential autotransfer vote
 	var/vote_autogamemode_timeleft = 100 //Length of time before round start when autogamemode vote is called (in seconds, default 100).
 	var/vote_no_default = 0				// vote does not default to nochange/norestart (tbi)
 	var/vote_no_dead = 0				// dead people can't vote (tbi)
+	var/vote_no_dead_crew_transfer = 0	// dead people can't vote on crew transfer votes
 //	var/enable_authentication = 0		// goon authentication
 	var/del_new_on_log = 1				// del's new players if they log before they spawn in
 	var/feature_object_spell_system = 0 //spawns a spellbook which gives object-type spells instead of verb-type spells for the wizard
@@ -217,6 +218,8 @@ var/list/gamemode_cache = list()
 
 	var/max_gear_cost = 10 // Used in chargen for accessory loadout limit. 0 disables loadout, negative allows infinite points.
 
+	var/allow_ic_printing = TRUE //Whether players should be allowed to print IC circuits from scripts.
+
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
 	for (var/T in L)
@@ -367,6 +370,9 @@ var/list/gamemode_cache = list()
 				if ("no_dead_vote")
 					config.vote_no_dead = 1
 
+				if ("no_dead_vote_crew_transfer")
+					config.vote_no_dead_crew_transfer = 1
+
 				if ("default_no_vote")
 					config.vote_no_default = 1
 
@@ -436,6 +442,8 @@ var/list/gamemode_cache = list()
 
 				if ("disable_ooc")
 					config.ooc_allowed = 0
+
+				if ("disable_looc")
 					config.looc_allowed = 0
 
 				if ("disable_aooc")
@@ -636,6 +644,9 @@ var/list/gamemode_cache = list()
 				if("disable_welder_vision")
 					config.welder_vision = 0
 
+				if("disable_circuit_printing")
+					config.allow_ic_printing = FALSE
+
 				if("allow_extra_antags")
 					config.allow_extra_antags = 1
 
@@ -720,6 +731,8 @@ var/list/gamemode_cache = list()
 					radiation_lower_limit = text2num(value)
 				if("player_limit")
 					player_limit = text2num(value)
+				if("hub")
+					world.update_hub_visibility()
 
 				else
 					log_misc("Unknown setting in configuration: '[name]'")

@@ -83,6 +83,14 @@
 	taste_description = "egg"
 	color = "#ffffaa"
 
+//vegetamarian alternative that is safe for skrell to ingest//rewired it from its intended nutriment/protein/egg/softtofu because it would not actually work, going with plan B, more recipes.
+
+/datum/reagent/nutriment/softtofu
+	name = "plant protein"
+	description = "A gooey pale bean paste."
+	taste_description = "healthy sadness"
+	color = "#ffffff"
+
 /datum/reagent/nutriment/honey
 	name = "Honey"
 	description = "A golden yellow syrup, loaded with sugary sweetness."
@@ -90,7 +98,7 @@
 	nutriment_factor = 10
 	color = "#ffff00"
 
-/datum/reagent/honey/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/nutriment/honey/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
 
 	if(alien == IS_UNATHI)
@@ -122,6 +130,28 @@
 			T.wet = min(T.wet, 1)
 		else
 			T.wet = 0
+
+/datum/reagent/nutriment/batter
+	name = "Batter"
+	description = "A gooey mixture of eggs and flour, a base for turning wheat into food."
+	taste_description = "blandness"
+	reagent_state = LIQUID
+	nutriment_factor = 3
+	color = "#ffd592"
+
+/datum/reagent/nutriment/batter/touch_turf(var/turf/simulated/T)
+	if(!istype(T, /turf/space))
+		new /obj/effect/decal/cleanable/pie_smudge(T)
+		if(T.wet > 1)
+			T.wet = min(T.wet, 1)
+		else
+			T.wet = 0
+
+/datum/reagent/nutriment/batter/cakebatter
+	name = "Cake Batter"
+	description = "A gooey mixture of eggs, flour and sugar, a important precursor to cake!"
+	taste_description = "sweetness"
+	color = "#ffe992"
 
 /datum/reagent/nutriment/coco
 	name = "Coco Powder"
@@ -226,7 +256,7 @@
 /datum/reagent/nutriment/mint
 	name = "Mint"
 	description = "Also known as Mentha."
-	taste_description = "mint"
+	taste_description = "sweet mint"
 	reagent_state = LIQUID
 	color = "#cf3600"
 
@@ -270,10 +300,10 @@
 /datum/reagent/frostoil
 	name = "Frost Oil"
 	description = "A special oil that noticably chills the body. Extracted from Ice Peppers."
-	taste_description = "mint"
+	taste_description = "arctic mint"
 	taste_mult = 1.5
 	reagent_state = LIQUID
-	color = "#b31008"
+	color = "#07aab2"
 
 /datum/reagent/frostoil/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -547,7 +577,7 @@
 /datum/reagent/drink/juice/potato
 	name = "Potato Juice"
 	description = "Juice of the potato. Bleh."
-	taste_description = "irish sadness"
+	taste_description = "irish sadness and potatoes"
 	nutrition = 2
 	color = "#302000"
 
@@ -597,6 +627,34 @@
 
 	glass_name = "watermelon juice"
 	glass_desc = "Delicious juice made from watermelon."
+
+/datum/reagent/drink/juice/turnip
+	name = "Turnip Juice"
+	description = "Delicious (?) juice made from turnips."
+	taste_description = "love of motherland and oppression"
+	color = "#b1166e"
+
+	glass_name = "turnip juice"
+	glass_desc = "Delicious (?) juice made from turnips."
+
+
+/datum/reagent/drink/juice/apple
+	name = "Apple Juice"
+	description = "Delicious sweet juice made from apples."
+	taste_description = "sweet apples"
+	color = "#c07c40"
+
+	glass_name = "apple juice"
+	glass_desc = "Delicious juice made from apples."
+
+/datum/reagent/drink/juice/pear
+	name = "Pear Juice"
+	description = "Delicious sweet juice made from pears."
+	taste_description = "sweet pears"
+	color = "#ffff66"
+
+	glass_name = "pear juice"
+	glass_desc = "Delicious juice made from pears."
 
 // Everything else
 
@@ -665,14 +723,21 @@
 
 /datum/reagent/drink/tea/icetea
 	name = "Iced Tea"
-	description = "No relation to a certain rap artist/ actor."
-	taste_description = "sweet tea"
-	color = "#104038" // rgb: 16, 64, 56
+	description = "It's the tea you know and love, but now it's cold."
+	taste_description = "cold black tea"
 	adj_temp = -5
 
 	glass_name = "iced tea"
-	glass_desc = "No relation to a certain rap artist/ actor."
+	glass_desc = "It's the tea you know and love, but now it's cold."
 	glass_special = list(DRINK_ICE)
+
+/datum/reagent/drink/tea/icetea/sweet
+	name = "Sweet Tea"
+	description = "It's the tea you know and love, but now it's cold. And sweet."
+	taste_description = "sweet tea"
+
+	glass_name = "sweet tea"
+	glass_desc = "It's the tea you know and love, but now it's cold. And sweet."
 
 /datum/reagent/drink/coffee
 	name = "Coffee"
@@ -694,9 +759,6 @@
 	if(alien == IS_DIONA)
 		return
 	..()
-	if(alien == IS_TAJARA)
-		M.adjustToxLoss(0.5 * removed)
-		M.make_jittery(4) //extra sensitive to caffine
 	if(adj_temp > 0)
 		holder.remove_reagent(/datum/reagent/frostoil, 10 * removed)
 	if(volume > 15)
@@ -704,18 +766,11 @@
 
 /datum/reagent/nutriment/coffee/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
-	if(alien == IS_TAJARA)
-		M.adjustToxLoss(2 * removed)
-		M.make_jittery(4)
-		return
 	M.add_chemical_effect(CE_PULSE, 2)
 
 /datum/reagent/drink/coffee/overdose(var/mob/living/carbon/M, var/alien)
 	if(alien == IS_DIONA)
 		return
-	if(alien == IS_TAJARA)
-		M.adjustToxLoss(4 * REM)
-		M.apply_effect(3, STUTTER)
 	M.make_jittery(5)
 	M.add_chemical_effect(CE_PULSE, 2)
 
@@ -1068,7 +1123,7 @@
 	strength = 50
 
 	glass_name = "ale"
-	glass_desc = "A freezing pint of delicious ale"
+	glass_desc = "A freezing container of delicious ale"
 
 /datum/reagent/ethanol/beer
 	name = "Beer"
@@ -1079,7 +1134,11 @@
 	nutriment_factor = 1
 
 	glass_name = "beer"
-	glass_desc = "A freezing pint of beer"
+	glass_desc = "A freezing container of beer"
+
+/datum/reagent/ethanol/beer/good
+
+	taste_description = "beer"
 
 /datum/reagent/ethanol/beer/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -1148,23 +1207,10 @@
 	M.sleeping = max(0, M.sleeping - 2)
 	if(M.bodytemperature > 310)
 		M.bodytemperature = max(310, M.bodytemperature - (5 * TEMPERATURE_DAMAGE_COEFFICIENT))
-	if(alien == IS_TAJARA)
-		M.adjustToxLoss(0.5 * removed)
-		M.make_jittery(4) //extra sensitive to caffine
-
-/datum/reagent/ethanol/coffee/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	if(alien == IS_TAJARA)
-		M.adjustToxLoss(2 * removed)
-		M.make_jittery(4)
-		return
-	..()
 
 /datum/reagent/ethanol/coffee/overdose(var/mob/living/carbon/M, var/alien)
 	if(alien == IS_DIONA)
 		return
-	if(alien == IS_TAJARA)
-		M.adjustToxLoss(4 * REM)
-		M.apply_effect(3, STUTTER)
 	M.make_jittery(5)
 
 /datum/reagent/ethanol/coffee/kahlua
@@ -1604,7 +1650,7 @@
 /datum/reagent/ethanol/gintonic
 	name = "Gin and Tonic"
 	description = "An all time classic, mild cocktail."
-	taste_description = "mild and tart"
+	taste_description = "mild tartness" //???
 	color = "#0064c8"
 	strength = 50
 
@@ -1851,9 +1897,9 @@
 		var/obj/item/organ/internal/heart/L = H.internal_organs_by_name[BP_HEART]
 		if (L && istype(L))
 			if(M.chem_doses[type] < 120)
-				L.take_damage(10 * removed, 0)
+				L.take_internal_damage(10 * removed, 0)
 			else
-				L.take_damage(100, 0)
+				L.take_internal_damage(100, 0)
 
 /datum/reagent/ethanol/red_mead
 	name = "Red Mead"

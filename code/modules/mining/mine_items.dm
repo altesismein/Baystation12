@@ -28,13 +28,6 @@
 	new /obj/item/weapon/pickaxe(src)
 	new /obj/item/clothing/glasses/meson(src)
 
-/******************************Lantern*******************************/
-
-/obj/item/device/flashlight/lantern
-	name = "lantern"
-	icon_state = "lantern"
-	desc = "A mining lantern."
-	brightness_on = 6			// luminosity when on
 
 /*****************************Pickaxe********************************/
 
@@ -55,7 +48,7 @@
 	attack_verb = list("hit", "pierced", "sliced", "attacked")
 	var/drill_sound = 'sound/weapons/Genhit.ogg'
 	var/drill_verb = "drilling"
-	sharp = 1
+	sharp = 0
 
 	var/excavation_amount = 200
 
@@ -71,6 +64,7 @@
 	digspeed = 30
 	origin_tech = list(TECH_MATERIAL = 3)
 	desc = "This makes no metallurgic sense."
+	sharp = 1
 
 /obj/item/weapon/pickaxe/drill
 	name = "advanced mining drill" // Can dig sand as well!
@@ -98,6 +92,7 @@
 	origin_tech = list(TECH_MATERIAL = 4)
 	desc = "This makes no metallurgic sense."
 	drill_verb = "picking"
+	sharp = 1
 
 /obj/item/weapon/pickaxe/diamond
 	name = "diamond pickaxe"
@@ -107,6 +102,7 @@
 	origin_tech = list(TECH_MATERIAL = 6, TECH_ENGINEERING = 4)
 	desc = "A pickaxe with a diamond pick head."
 	drill_verb = "picking"
+	sharp = 1
 
 /obj/item/weapon/pickaxe/diamonddrill //When people ask about the badass leader of the mining tools, they are talking about ME!
 	name = "diamond mining drill"
@@ -247,7 +243,7 @@
 	anchored = 1
 	icon_state = "[initial(icon_state)]_open"
 	if(fringe)
-		set_light(2, 0.1) // Very dim so the rest of the flag is barely visible - if the turf is completely dark, you can't see anything on it, no matter what
+		set_light(0.2, 0.1, 1) // Very dim so the rest of the flag is barely visible - if the turf is completely dark, you can't see anything on it, no matter what
 		var/image/addon = image(icon = src.icon, icon_state = fringe) // Bright fringe
 		addon.layer = ABOVE_LIGHTING_LAYER
 		addon.plane = EFFECTS_ABOVE_LIGHTING_PLANE
@@ -261,63 +257,3 @@
 	icon_state = initial(icon_state)
 	overlays.Cut()
 	set_light(0)
-
-
-
-/**************************Plasma Cutter*****************************/
-
-/obj/item/weapon/gun/energy/plasmacutter/mounted
-	name = "mounted plasma cutter"
-	self_recharge = 1
-	use_external_power = 1
-
-/obj/item/rig_module/mounted/plasmacutter
-	name = "mounted plasma cutter"
-	desc = "A knee-mounted plasma cutter. Don't question it."
-	icon_state = "plasmacutter"
-	interface_name = "mounted plasma cutter"
-	interface_desc = "A knee-mounted suit-powered plasma cutter. Don't question it."
-	origin_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
-	gun = /obj/item/weapon/gun/energy/plasmacutter/mounted
-
-/obj/item/weapon/gun/energy/plasmacutter
-	name = "plasma cutter"
-	desc = "A mining tool capable of expelling concentrated plasma bursts. You could use it to cut limbs off of xenos! Or, you know, mine stuff."
-	charge_meter = 0
-	icon = 'icons/obj/tools.dmi'
-	icon_state = "plasmacutter"
-	item_state = "plasmacutter"
-	fire_sound = 'sound/weapons/plasma_cutter.ogg'
-	slot_flags = SLOT_BELT|SLOT_BACK
-	w_class = 3
-	force = 15
-	sharp = 1
-	edge = 1
-	origin_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
-	matter = list(DEFAULT_WALL_MATERIAL = 4000)
-	projectile_type = /obj/item/projectile/beam/plasmacutter
-	max_shots = 10
-	self_recharge = 1
-
-/obj/item/projectile/beam/plasmacutter
-	name = "plasma arc"
-	icon_state = "omnilaser"
-	damage = 15
-	damage_type = BURN
-	check_armour = "laser"
-	kill_count = 5
-	pass_flags = PASS_FLAG_TABLE
-
-	muzzle_type = /obj/effect/projectile/trilaser/muzzle
-	tracer_type = /obj/effect/projectile/trilaser/tracer
-	impact_type = /obj/effect/projectile/trilaser/impact
-
-/obj/item/projectile/beam/plasmacutter/on_impact(var/atom/A)
-	if(istype(A, /turf/simulated/mineral))
-		var/turf/simulated/mineral/M = A
-		if(prob(33))
-			M.GetDrilled(1)
-			return
-		else
-			M.emitter_blasts_taken += 2
-	. = ..()

@@ -157,7 +157,7 @@
 	possible_origins = list("Baldie's Hats and Accessories", "The Right Fit", "Like a Glove", "Space Fashion")
 	possible_trading_items = list(/obj/item/clothing/accessory            = TRADER_ALL,
 								/obj/item/clothing/accessory/badge        = TRADER_BLACKLIST_ALL,
-								/obj/item/clothing/accessory/holster      = TRADER_BLACKLIST_ALL,
+								/obj/item/clothing/accessory/storage/holster      = TRADER_BLACKLIST_ALL,
 								/obj/item/clothing/accessory/medal        = TRADER_BLACKLIST_ALL,
 								/obj/item/clothing/accessory/storage      = TRADER_BLACKLIST_ALL,
 								/obj/item/clothing/gloves                 = TRADER_SUBTYPES_ONLY,
@@ -178,7 +178,6 @@
 								/obj/item/clothing/head/helmet            = TRADER_BLACKLIST_ALL,
 								/obj/item/clothing/head/lightrig          = TRADER_BLACKLIST_ALL,
 								/obj/item/clothing/head/radiation         = TRADER_BLACKLIST,
-								/obj/item/clothing/head/tajaran           = TRADER_BLACKLIST,
 								/obj/item/clothing/head/warden            = TRADER_BLACKLIST,
 								/obj/item/clothing/head/welding           = TRADER_BLACKLIST)
 
@@ -227,7 +226,7 @@ Sells devices, odds and ends, and medical stuff
 								/obj/item/device/ano_scanner               = TRADER_THIS_TYPE,
 								/obj/item/device/core_sampler              = TRADER_THIS_TYPE,
 								/obj/item/device/depth_scanner             = TRADER_THIS_TYPE,
-								/obj/item/device/beacon_locator            = TRADER_THIS_TYPE,
+								/obj/item/weapon/pinpointer/radio            = TRADER_THIS_TYPE,
 								/obj/item/device/antibody_scanner          = TRADER_THIS_TYPE,
 								/obj/item/stack/medical/advanced           = TRADER_BLACKLIST)
 	speech = list("hail_generic"    = "Hello, hello! Bits and bobs and everything in between, I hope you find what you're looking for!",

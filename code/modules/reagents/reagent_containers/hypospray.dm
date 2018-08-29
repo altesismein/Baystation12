@@ -4,7 +4,7 @@
 
 /obj/item/weapon/reagent_containers/hypospray //obsolete, use hypospray/vial for the actual hypospray item
 	name = "hypospray"
-	desc = "The DeForest Medical Corporation hypospray is a sterile, air-needle autoinjector for rapid administration of drugs to patients."
+	desc = "The DeForest Medical Corporation, a subsidiary of Zeng-Hu Pharmaceuticals, hypospray is a sterile, air-needle autoinjector for rapid administration of drugs to patients."
 	icon = 'icons/obj/syringe.dmi'
 	item_state = "hypo"
 	icon_state = "hypo"
@@ -40,7 +40,7 @@
 		if(!affected)
 			to_chat(user, "<span class='danger'>\The [H] is missing that limb!</span>")
 			return
-		else if(affected.robotic >= ORGAN_ROBOT)
+		else if(BP_IS_ROBOTIC(affected))
 			to_chat(user, "<span class='danger'>You cannot inject a robotic limb.</span>")
 			return
 
@@ -48,6 +48,7 @@
 	user.do_attack_animation(M)
 	to_chat(user, "<span class='notice'>You inject [M] with [src].</span>")
 	to_chat(M, "<span class='notice'>You feel a tiny prick!</span>")
+	playsound(src, 'sound/effects/hypospray.ogg',25)
 	user.visible_message("<span class='warning'>[user] injects [M] with [src].</span>")
 
 	if(M.reagents)
@@ -61,7 +62,7 @@
 /obj/item/weapon/reagent_containers/hypospray/vial
 	name = "hypospray"
 	item_state = "autoinjector"
-	desc = "The DeForest Medical Corporation hypospray is a sterile, air-needle autoinjector for rapid administration of drugs to patients. Uses a replacable 30u vial."
+	desc = "The DeForest Medical Corporation, a subsidiary of Zeng-Hu Pharmaceuticals, hypospray is a sterile, air-needle autoinjector for rapid administration of drugs to patients. Uses a replacable 30u vial."
 	var/obj/item/weapon/reagent_containers/glass/beaker/vial/loaded_vial
 	volume = 0
 
@@ -92,11 +93,11 @@
 		if(!loaded_vial)
 			if(!do_after(user,10) || loaded_vial || !(W in user))
 				return 0
+			if(!user.unEquip(W, src))
+				return
 			if(W.is_open_container())
 				W.atom_flags ^= ATOM_FLAG_OPEN_CONTAINER
 				W.update_icon()
-			user.drop_item()
-			W.forceMove(src)
 			loaded_vial = W
 			reagents.maximum_volume = loaded_vial.reagents.maximum_volume
 			loaded_vial.reagents.trans_to_holder(reagents,volume)
@@ -116,6 +117,8 @@
 	amount_per_transfer_from_this = 5
 	volume = 5
 	origin_tech = list(TECH_MATERIAL = 2, TECH_BIO = 2)
+	slot_flags = SLOT_BELT | SLOT_EARS
+	w_class = ITEM_SIZE_TINY
 	var/list/starts_with = list(/datum/reagent/inaprovaline = 5)
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/New()
@@ -159,6 +162,11 @@
 	name = "autoinjector (oxycodone)"
 	icon_state = "black"
 	starts_with = list(/datum/reagent/tramadol/oxycodone = 5)
+
+/obj/item/weapon/reagent_containers/hypospray/autoinjector/antirad
+	name = "autoinjector (anti-rad)"
+	icon_state = "yellow"
+	starts_with = list(/datum/reagent/hyronalin = 5)
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/mindbreaker
 	name = "autoinjector"

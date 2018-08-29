@@ -374,6 +374,7 @@
 		eject_occupant(user)
 		return  // eject_occupant opens the door, so we need to return
 	isopen = !isopen
+	playsound(src, 'sound/machines/suitstorage_cycledoor.ogg', 50, 0)
 	return
 
 
@@ -390,6 +391,7 @@
 	if(isopen)
 		return
 	islocked = !islocked
+	playsound(src, 'sound/machines/suitstorage_lockdoor.ogg', 50, 0)
 	return
 
 
@@ -584,80 +586,30 @@
 			update_icon()
 			return
 		return
-	if( istype(I,/obj/item/clothing/suit/space) )
-		if(!isopen)
-			return
-		var/obj/item/clothing/suit/space/S = I
-		if(suit)
-			to_chat(user, "<span class='notice'>The unit already contains a suit.</span>")
-			return
-		to_chat(user, "You load the [S.name] into the storage compartment.")
-		user.drop_item()
-		S.forceMove(src)
-		suit = S
-		update_icon()
-		updateUsrDialog()
-		return
-	if( istype(I,/obj/item/clothing/head/helmet/space) )
-		if(!isopen)
-			return
-		var/obj/item/clothing/head/helmet/H = I
-		if(helmet )
-			to_chat(user, "<span class='notice'>The unit already contains a helmet.</span>")
-			return
-		to_chat(user, "You load the [H.name] into the storage compartment.")
-		user.drop_item()
-		H.forceMove(src)
-		helmet  = H
-		update_icon()
-		updateUsrDialog()
-		return
-	if( istype(I,/obj/item/clothing/shoes/magboots) )
-		if(!isopen)
-			return
-		var/obj/item/clothing/shoes/magboots/B = I
-		if(boots)
-			to_chat(user, "<span class='notice'>The unit already contains a pair of magboots.</span>")
-			return
-		to_chat(user, "You load the [B.name] into the storage compartment.")
-		user.drop_item()
-		B.forceMove(src)
-		boots = B
-		update_icon()
-		updateUsrDialog()
-		return
-	if( istype(I,/obj/item/weapon/tank) )
-		if(!isopen)
-			return
-		var/obj/item/weapon/tank/T = I
-		if(tank)
-			to_chat(user, "<span class='notice'>The unit already contains an air tank.</span>")
-			return
-		to_chat(user, "You load the [T.name] into the storage compartment.")
-		user.drop_item()
-		T.forceMove(src)
-		tank = T
-		update_icon()
-		updateUsrDialog()
-		return
-	if( istype(I,/obj/item/clothing/mask) )
-		if(!isopen)
-			return
-		var/obj/item/clothing/mask/M = I
-		if(mask)
-			to_chat(user, "<span class='notice'>The unit already contains a mask.</span>")
-			return
-		to_chat(user, "You load the [M.name] into the storage compartment.")
-		user.drop_item()
-		M.forceMove(src)
-		mask = M
-		update_icon()
-		updateUsrDialog()
-		return
+
+#define TRY_INSERT_SUIT_PIECE(slot, path)\
+	if(istype(I, /obj/item/##path)){\
+		if(!isopen) return;\
+		if(##slot){\
+			to_chat(user, "<span class='notice'>The unit already contains \a [slot].</span>");\
+			return\
+		};\
+		if(!user.unEquip(I, src)) return;\
+		to_chat(user, "You load the [I.name] into the storage compartment.");\
+		##slot = I;\
+		update_icon();\
+		updateUsrDialog();\
+		return\
+	}
+
+	TRY_INSERT_SUIT_PIECE(suit, clothing/suit/space)
+	TRY_INSERT_SUIT_PIECE(helmet, clothing/head/helmet/space)
+	TRY_INSERT_SUIT_PIECE(boots, clothing/shoes/magboots)
+	TRY_INSERT_SUIT_PIECE(tank, weapon/tank)
+	TRY_INSERT_SUIT_PIECE(mask, clothing/mask)
 	update_icon()
 	updateUsrDialog()
-	return
-
+#undef TRY_INSERT_SUIT_PIECE
 
 /obj/machinery/suit_storage_unit/attack_ai(mob/user as mob)
 	return attack_hand(user)
@@ -677,7 +629,7 @@
 	icon = 'icons/obj/suitstorage.dmi'
 	icon_state = "close"
 
-	req_access = list(access_captain,access_heads)
+	req_access = list(access_captain,access_bridge)
 
 	var/active = 0          // PLEASE HOLD.
 	var/safeties = 1        // The cycler won't start with a living thing inside it unless safeties are off.
@@ -691,7 +643,7 @@
 	//Departments that the cycler can paint suits to look like.
 	var/list/departments = list("Engineering","Mining","Medical","Security","Atmos","Science","Pilot")
 	//Species that the suits can be configured to fit.
-	var/list/species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_TAJARA)
+	var/list/species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
 	var/target_department
 	var/target_species
@@ -720,42 +672,42 @@
 	model_text = "Engineering"
 	req_access = list(access_construction)
 	departments = list("Engineering","Atmos")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI) //Add Unathi when sprites exist for their suits.
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI) //Add Unathi when sprites exist for their suits.
 
 /obj/machinery/suit_cycler/mining
 	name = "Mining suit cycler"
 	model_text = "Mining"
 	req_access = list(access_mining)
 	departments = list("Mining")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
 /obj/machinery/suit_cycler/science
 	name = "Excavation suit cycler"
 	model_text = "Excavation"
 	req_access = list(access_xenoarch)
 	departments = list("Science")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
 /obj/machinery/suit_cycler/security
 	name = "Security suit cycler"
 	model_text = "Security"
 	req_access = list(access_security)
 	departments = list("Security")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
 /obj/machinery/suit_cycler/medical
 	name = "Medical suit cycler"
 	model_text = "Medical"
 	req_access = list(access_medical)
 	departments = list("Medical")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
 /obj/machinery/suit_cycler/syndicate
 	name = "Nonstandard suit cycler"
 	model_text = "Nonstandard"
 	req_access = list(access_syndicate)
 	departments = list("Mercenary")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 	can_repair = 1
 
 /obj/machinery/suit_cycler/pilot
@@ -763,7 +715,7 @@
 	model_text = "Pilot"
 	req_access = list(access_mining_office)
 	departments = list("Pilot")
-	species = list(SPECIES_HUMAN,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
 /obj/machinery/suit_cycler/attack_ai(mob/user as mob)
 	return attack_hand(user)
@@ -831,10 +783,9 @@
 		if(I.icon_override == CUSTOM_ITEM_MOB)
 			to_chat(user, "You cannot refit a customised voidsuit.")
 			return
-
+		if(!user.unEquip(I, src))
+			return
 		to_chat(user, "You fit \the [I] into the suit cycler.")
-		user.drop_item()
-		I.loc = src
 		helmet = I
 
 		update_icon()
@@ -854,10 +805,9 @@
 		if(I.icon_override == CUSTOM_ITEM_MOB)
 			to_chat(user, "You cannot refit a customised voidsuit.")
 			return
-
+		if(!user.unEquip(I, src))
+			return
 		to_chat(user, "You fit \the [I] into the suit cycler.")
-		user.drop_item()
-		I.loc = src
 		suit = I
 
 		update_icon()
@@ -1092,11 +1042,11 @@
 	switch(target_department)
 		if("Engineering")
 			if(helmet)
-				helmet.name = "engineering voidsuit helmet"
+				helmet.SetName("engineering voidsuit helmet")
 				helmet.icon_state = "rig0-engineering"
 				helmet.item_state = "eng_helm"
 			if(suit)
-				suit.name = "engineering voidsuit"
+				suit.SetName("engineering voidsuit")
 				suit.icon_state = "rig-engineering"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "eng_voidsuit",
@@ -1104,11 +1054,11 @@
 				)
 		if("Mining")
 			if(helmet)
-				helmet.name = "mining voidsuit helmet"
+				helmet.SetName("mining voidsuit helmet")
 				helmet.icon_state = "rig0-mining"
 				helmet.item_state = "mining_helm"
 			if(suit)
-				suit.name = "mining voidsuit"
+				suit.SetName("mining voidsuit")
 				suit.icon_state = "rig-mining"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "mining_voidsuit",
@@ -1116,11 +1066,11 @@
 				)
 		if("Science")
 			if(helmet)
-				helmet.name = "excavation voidsuit helmet"
+				helmet.SetName("excavation voidsuit helmet")
 				helmet.icon_state = "rig0-excavation"
 				helmet.item_state = "excavation_helm"
 			if(suit)
-				suit.name = "excavation voidsuit"
+				suit.SetName("excavation voidsuit")
 				suit.icon_state = "rig-excavation"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "excavation_voidsuit",
@@ -1128,11 +1078,11 @@
 				)
 		if("Medical")
 			if(helmet)
-				helmet.name = "medical voidsuit helmet"
+				helmet.SetName("medical voidsuit helmet")
 				helmet.icon_state = "rig0-medical"
 				helmet.item_state = "medical_helm"
 			if(suit)
-				suit.name = "medical voidsuit"
+				suit.SetName("medical voidsuit")
 				suit.icon_state = "rig-medical"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "medical_voidsuit",
@@ -1140,11 +1090,11 @@
 				)
 		if("Security")
 			if(helmet)
-				helmet.name = "security voidsuit helmet"
+				helmet.SetName("security voidsuit helmet")
 				helmet.icon_state = "rig0-sec"
 				helmet.item_state = "sec_helm"
 			if(suit)
-				suit.name = "security voidsuit"
+				suit.SetName("security voidsuit")
 				suit.icon_state = "rig-sec"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "sec_voidsuit",
@@ -1152,11 +1102,11 @@
 				)
 		if("Atmos")
 			if(helmet)
-				helmet.name = "atmospherics voidsuit helmet"
+				helmet.SetName("atmospherics voidsuit helmet")
 				helmet.icon_state = "rig0-atmos"
 				helmet.item_state = "atmos_helm"
 			if(suit)
-				suit.name = "atmospherics voidsuit"
+				suit.SetName("atmospherics voidsuit")
 				suit.icon_state = "rig-atmos"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "atmos_voidsuit",
@@ -1164,20 +1114,20 @@
 				)
 		if("Explorer")
 			if(helmet)
-				helmet.name = "exploration voidsuit helmet"
+				helmet.SetName("exploration voidsuit helmet")
 				helmet.icon_state = "helm_explorer"
 				helmet.item_state = "helm_explorer"
 			if(suit)
-				suit.name = "exploration voidsuit"
+				suit.SetName("exploration voidsuit")
 				suit.icon_state = "void_explorer"
 
 		if("^%###^%$" || "Mercenary")
 			if(helmet)
-				helmet.name = "blood-red voidsuit helmet"
+				helmet.SetName("blood-red voidsuit helmet")
 				helmet.icon_state = "rig0-syndie"
 				helmet.item_state = "syndie_helm"
 			if(suit)
-				suit.name = "blood-red voidsuit"
+				suit.SetName("blood-red voidsuit")
 				suit.icon_state = "rig-syndie"
 				suit.item_state_slots = list(
 					slot_l_hand_str = "syndie_voidsuit",
@@ -1185,12 +1135,12 @@
 				)
 		if("Pilot")
 			if(helmet)
-				helmet.name = "pilot voidsuit helmet"
+				helmet.SetName("pilot voidsuit helmet")
 				helmet.icon_state = "rig0_pilot"
 				helmet.item_state = "pilot_helm"
 			if(suit)
-				suit.name = "pilot voidsuit"
+				suit.SetName("pilot voidsuit")
 				suit.icon_state = "rig-pilot"
 
-	if(helmet) helmet.name = "refitted [helmet.name]"
-	if(suit) suit.name = "refitted [suit.name]"
+	if(helmet) helmet.SetName("refitted [helmet.name]")
+	if(suit) suit.SetName("refitted [suit.name]")

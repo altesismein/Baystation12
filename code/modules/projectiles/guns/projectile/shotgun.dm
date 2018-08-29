@@ -16,6 +16,7 @@
 	one_hand_penalty = 2
 	var/recentpump = 0 // to prevent spammage
 	wielded_item_state = "gun_wielded"
+	load_sound = 'sound/weapons/guns/interaction/shotgun_instert.ogg'
 
 /obj/item/weapon/gun/projectile/shotgun/pump/consume_next_projectile()
 	if(chambered)
@@ -31,7 +32,9 @@
 	playsound(M, 'sound/weapons/shotgunpump.ogg', 60, 1)
 
 	if(chambered)//We have a shell in the chamber
-		chambered.loc = get_turf(src)//Eject casing
+		chambered.forceMove(get_turf(src))//Eject casing
+		if(LAZYLEN(chambered.fall_sounds))
+			playsound(loc, pick(chambered.fall_sounds), 50, 1)
 		chambered = null
 
 	if(loaded.len)
@@ -105,7 +108,7 @@
 			one_hand_penalty = 0
 			slot_flags &= ~SLOT_BACK	//you can't sling it on your back
 			slot_flags |= (SLOT_BELT|SLOT_HOLSTER) //but you can wear it on your belt (poorly concealed under a trenchcoat, ideally) - or in a holster, why not.
-			name = "sawn-off shotgun"
+			SetName("sawn-off shotgun")
 			desc = "Omar's coming!"
 			to_chat(user, "<span class='warning'>You shorten the barrel of \the [src]!</span>")
 	else

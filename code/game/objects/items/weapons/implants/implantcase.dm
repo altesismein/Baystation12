@@ -42,10 +42,10 @@
 			return
 		t = sanitizeSafe(t, MAX_NAME_LEN)
 		if(t)
-			name = "glass case - '[t]'"
+			SetName("glass case - '[t]'")
 			desc = "A case containing \a [t] implant."
 		else
-			name = "glass case"
+			SetName(initial(name))
 			desc = "A case containing an implant."
 	else if(istype(I, /obj/item/weapon/reagent_containers/syringe))
 		if(istype(imp,/obj/item/weapon/implant/chem))
@@ -63,9 +63,8 @@
 		update_description()
 		update_icon()
 		M.update_icon()
-	else if (istype(I, /obj/item/weapon/implant))
+	else if (istype(I, /obj/item/weapon/implant) && user.unEquip(I, src))
 		to_chat(usr, "<span class='notice'>You slide \the [I] into \the [src].</span>")
-		user.drop_from_inventory(I,src)
 		imp = I
 		update_description()
 		update_icon()

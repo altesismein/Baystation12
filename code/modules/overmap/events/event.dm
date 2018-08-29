@@ -29,7 +29,7 @@
 			GLOB.exited_event.register(event_turf, src, /decl/overmap_event_handler/proc/on_turf_exited)
 
 			var/obj/effect/overmap_event/event = new(event_turf)
-			event.name = overmap_event.name
+			event.SetName(overmap_event.name)
 			event.icon_state = pick(overmap_event.event_icon_states)
 			event.opacity =  overmap_event.opacity
 
@@ -128,9 +128,6 @@
 	var/continuous = TRUE //if it should form continous blob, or can have gaps
 
 /datum/overmap_event/proc/enter(var/obj/effect/overmap/ship/victim)
-	if(!GLOB.event_manager)
-		log_error("Event manager not setup.")
-		return
 	if(victim in victims)
 		log_error("Multiple attempts to trigger the same event by [victim] detected.")
 		return
@@ -139,6 +136,7 @@
 	var/datum/event/E = new event(EM)
 	E.startWhen = 0
 	E.endWhen = INFINITY
+	E.affecting_z = victim.map_z
 	victims[victim] = E
 
 /datum/overmap_event/proc/leave(victim)
@@ -180,11 +178,12 @@
 
 /datum/overmap_event/ion
 	name = "ion cloud"
-	event = /datum/event/ionstorm
+	event = /datum/event/ionstorm/overmap
 	count = 8
 	radius = 3
 	opacity = 0
 	event_icon_states = list("ion1", "ion2", "ion3", "ion4")
+	difficulty = EVENT_LEVEL_MAJOR
 
 /datum/overmap_event/carp
 	name = "carp shoal"

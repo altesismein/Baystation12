@@ -44,20 +44,21 @@
 	var/obj/item/organ/external/head = get_organ(BP_HEAD)
 	var/mob/living/simple_animal/borer/B
 
-	for(var/I in head.implants)
-		if(istype(I,/mob/living/simple_animal/borer))
-			B = I
-	if(B)
-		if(!B.ckey && ckey && B.controlling)
-			B.ckey = ckey
-			B.controlling = 0
-		if(B.host_brain.ckey)
-			ckey = B.host_brain.ckey
-			B.host_brain.ckey = null
-			B.host_brain.name = "host brain"
-			B.host_brain.real_name = "host brain"
+	if(head)
+		for(var/I in head.implants)
+			if(istype(I,/mob/living/simple_animal/borer))
+				B = I
+		if(B)
+			if(!B.ckey && ckey && B.controlling)
+				B.ckey = ckey
+				B.controlling = 0
+			if(B.host_brain.ckey)
+				ckey = B.host_brain.ckey
+				B.host_brain.ckey = null
+				B.host_brain.SetName("host brain")
+				B.host_brain.real_name = "host brain"
 
-		verbs -= /mob/living/carbon/proc/release_control
+			verbs -= /mob/living/carbon/proc/release_control
 
 	callHook("death", list(src, gibbed))
 
@@ -86,7 +87,7 @@
 
 	mutations.Add(HUSK)
 	for(var/obj/item/organ/external/E in organs)
-		E.disfigured = 1
+		E.status |= ORGAN_DISFIGURED
 	update_body(1)
 	return
 
@@ -106,6 +107,6 @@
 
 	mutations.Add(SKELETON)
 	for(var/obj/item/organ/external/E in organs)
-		E.disfigured = 1
+		E.status |= ORGAN_DISFIGURED
 	update_body(1)
 	return

@@ -3,15 +3,15 @@
 
 var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 
-/datum/category_group/player_setup_category/general_preferences
-	name = "General"
+/datum/category_group/player_setup_category/physical_preferences
+	name = "Physical"
 	sort_order = 1
-	category_item_type = /datum/category_item/player_setup_item/general
+	category_item_type = /datum/category_item/player_setup_item/physical
 
-/datum/category_group/player_setup_category/skill_preferences
-	name = "Skills"
+/datum/category_group/player_setup_category/background_preferences
+	name = "Background"
 	sort_order = 2
-	category_item_type = /datum/category_item/player_setup_item/skills
+	category_item_type = /datum/category_item/player_setup_item/background
 
 /datum/category_group/player_setup_category/occupation_preferences
 	name = "Occupation"
@@ -236,6 +236,12 @@ var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 		return 1
 
 	. = OnTopic(href, href_list, usr)
+
+	// The user might have joined the game or otherwise had a change of mob while tweaking their preferences.
+	pref_mob = preference_mob()
+	if(!pref_mob || !pref_mob.client)
+		return 1
+
 	if(. & TOPIC_UPDATE_PREVIEW)
 		pref_mob.client.prefs.preview_icon = null
 	if(. & TOPIC_REFRESH)

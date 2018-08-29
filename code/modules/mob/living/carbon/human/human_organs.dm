@@ -50,7 +50,7 @@
 			//Moving around with fractured ribs won't do you any good
 				if (prob(10) && !stat && can_feel_pain() && chem_effects[CE_PAINKILLER] < 50 && E.is_broken() && E.internal_organs.len)
 					custom_pain("Pain jolts through your broken [E.encased ? E.encased : E.name], staggering you!", 50, affecting = E)
-					drop_item(loc)
+					unequip_item(loc)
 					Stun(2)
 
 				//Moving makes open wounds get infected much faster
@@ -69,6 +69,11 @@
 
 	// Buckled to a bed/chair. Stance damage is forced to 0 since they're sitting on something solid
 	if (istype(buckled, /obj/structure/bed))
+		return
+
+	// Can't fall if nothing pulls you down
+	var/area/area = get_area(src)
+	if (!area || !area.has_gravity())
 		return
 
 	var/limb_pain
@@ -136,11 +141,22 @@
 		return
 
 	for (var/obj/item/organ/external/E in organs)
-		if(!E || !E.can_grasp)
+		if(!E || !(E.limb_flags & ORGAN_FLAG_CAN_GRASP))
 			continue
 		if(((E.is_broken() || E.is_dislocated()) && !E.splinted) || E.is_malfunctioning())
 			grasp_damage_disarm(E)
 
+/mob/living/carbon/human/proc/stance_damage_prone(var/obj/item/organ/external/affected)
+
+	if(affected)
+		switch(affected.body_part)
+			if(FOOT_LEFT, FOOT_RIGHT)
+				to_chat(src, "<span class='warning'>You lose your footing as your [affected.name] spasms!</span>")
+			if(LEG_LEFT, LEG_RIGHT)
+				to_chat(src, "<span class='warning'>Your [affected.name] buckles from the shock!</span>")
+			else
+				return
+	Weaken(5)
 
 /mob/living/carbon/human/proc/grasp_damage_disarm(var/obj/item/organ/external/affected)
 	var/disarm_slot
@@ -158,9 +174,10 @@
 	if(!thing)
 		return
 
-	drop_from_inventory(thing)
+	if(!unEquip(thing))
+		return
 
-	if(affected.robotic >= ORGAN_ROBOT)
+	if(BP_IS_ROBOTIC(affected))
 		visible_message("<B>\The [src]</B> drops what they were holding, \his [affected.name] malfunctioning!")
 
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()

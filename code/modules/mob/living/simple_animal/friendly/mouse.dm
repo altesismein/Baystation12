@@ -29,6 +29,7 @@
 	holder_type = /obj/item/weapon/holder/mouse
 	mob_size = MOB_MINISCULE
 	possession_candidate = 1
+	can_escape = 1
 
 	can_pull_size = ITEM_SIZE_TINY
 	can_pull_mobs = MOB_PULL_NONE
@@ -112,5 +113,5 @@
 /mob/living/simple_animal/mouse/brown/Tom/New()
 	..()
 	// Change my name back, don't want to be named Tom (666)
-	name = initial(name)
+	SetName(initial(name))
 	real_name = name

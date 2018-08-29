@@ -20,12 +20,12 @@
 		model_info = model
 		var/datum/robolimb/R = all_robolimbs[model]
 		if(R)
-			name = "[R.company] [initial(name)]"
+			SetName("[R.company] [initial(name)]")
 			desc = "[R.desc]"
 			if(icon_state in icon_states(R.icon))
 				icon = R.icon
 	else
-		name = "robot [initial(name)]"
+		SetName("robot [initial(name)]")
 
 /obj/item/robot_parts/proc/can_install(mob/user)
 	return TRUE
@@ -96,7 +96,7 @@
 	var/success = TRUE;
 	if(!(flash1 && flash2))
 		to_chat(user, "<span class='warning'>You need to attach a flash to it first!</span>")
-		success = FALSE:
+		success = FALSE
 	return success && ..();
 
 /obj/item/robot_parts/robot_suit
@@ -136,11 +136,10 @@
 	if(istype(W, /obj/item/stack/material) && W.get_material_name() == DEFAULT_WALL_MATERIAL && !parts[BP_L_ARM] && !parts[BP_R_ARM] && !parts[BP_L_LEG] && !parts[BP_R_LEG] && !parts[BP_CHEST] && !parts[BP_HEAD])
 		var/obj/item/stack/material/M = W
 		if (M.use(1))
-			var/obj/item/weapon/secbot_assembly/ed209_assembly/B = new /obj/item/weapon/secbot_assembly/ed209_assembly
-			B.loc = get_turf(src)
+			var/obj/item/weapon/secbot_assembly/ed209_assembly/B = new /obj/item/weapon/secbot_assembly/ed209_assembly(get_turf(src))
 			to_chat(user, "<span class='notice'>You armed the robot frame.</span>")
 			if (user.get_inactive_hand()==src)
-				user.remove_from_mob(src)
+				user.drop_from_inventory(src) //clears inactive hand; item will be deleted anyway.
 				user.put_in_inactive_hand(B)
 			qdel(src)
 		else
@@ -150,8 +149,8 @@
 		var/obj/item/robot_parts/part = W
 		if(src.parts[part.bp_tag])	return
 		if(part.can_install(user))
-			user.drop_item()
-			part.loc = src
+			if(!user.unEquip(W, src))
+				return
 			src.parts[part.bp_tag] = part
 			src.update_icon()
 
@@ -185,14 +184,13 @@
 				to_chat(user, "<span class='warning'>Sticking a dead [W] into the frame would sort of defeat the purpose.</span>")
 				return
 
-			if(jobban_isbanned(B, "Cyborg"))
+			if(jobban_isbanned(B, "Robot"))
 				to_chat(user, "<span class='warning'>This [W] does not seem to fit.</span>")
 				return
-
+			if(!user.unEquip(W))
+				return
 			var/mob/living/silicon/robot/O = new /mob/living/silicon/robot(get_turf(loc), unfinished = 1)
 			if(!O)	return
-
-			user.drop_item()
 
 			O.mmi = W
 			O.set_invisibility(0)
@@ -204,12 +202,12 @@
 			if(O.mind && O.mind.special_role)
 				O.mind.store_memory("In case you look at this after being borged, the objectives are only here until I find a way to make them not show up for you, as I can't simply delete them without screwing up round-end reporting. --NeoFite")
 
-			O.job = "Cyborg"
+			O.job = "Robot"
 
 			var/obj/item/robot_parts/chest/chest = parts[BP_CHEST]
 			O.cell = chest.cell
-			O.cell.loc = O
-			W.loc = O//Should fix cybros run time erroring when blown up. It got deleted before, along with the frame.
+			O.cell.forceMove(O)
+			W.forceMove(O) //Should fix cybros run time erroring when blown up. It got deleted before, along with the frame.
 
 			// Since we "magically" installed a cell, we also have to update the correct component.
 			if(O.cell)
@@ -243,8 +241,8 @@
 			to_chat(user, "<span class='warning'>You have already inserted a cell!</span>")
 			return
 		else
-			user.drop_item()
-			W.loc = src
+			if(!user.unEquip(W, src))
+				return
 			src.cell = W
 			to_chat(user, "<span class='notice'>You insert the cell!</span>")
 	if(isCoil(W))
@@ -270,7 +268,7 @@
 				return
 			var/name = sanitizeSafe(input(user,"Set a name for the new prosthetic."), MAX_NAME_LEN)
 			if(!name)
-				name = "prosthetic ([random_id("prosthetic_id", 1, 999)])"
+				SetName("prosthetic ([random_id("prosthetic_id", 1, 999)])")
 
 			// Create a new, nonliving human.
 			var/mob/living/carbon/human/H = new /mob/living/carbon/human(get_turf(loc))
@@ -332,7 +330,6 @@
 	else if(istype(W, /obj/item/weapon/stock_parts/manipulator))
 		to_chat(user, "<span class='notice'>You install some manipulators and modify the head, creating a functional spider-bot!</span>")
 		new /mob/living/simple_animal/spiderbot(get_turf(loc))
-		user.drop_item()
 		qdel(W)
 		qdel(src)
 		return
@@ -343,13 +340,13 @@
 		to_chat(user, "<span class='notice'>You have already inserted the eyes!</span>")
 		return
 	else if(src.flash1)
-		user.drop_item()
-		W.loc = src
+		if(!user.unEquip(W, src))
+			return
 		src.flash2 = W
 		to_chat(user, "<span class='notice'>You insert the flash into the eye socket!</span>")
 	else
-		user.drop_item()
-		W.loc = src
+		if(!user.unEquip(W, src))
+			return
 		src.flash1 = W
 		to_chat(user, "<span class='notice'>You insert the flash into the eye socket!</span>")
 

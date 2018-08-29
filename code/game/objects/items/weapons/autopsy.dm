@@ -151,7 +151,7 @@
 	sleep(10)
 
 	var/obj/item/weapon/paper/P = new(usr.loc)
-	P.name = "Autopsy Data ([target_name])"
+	P.SetName("Autopsy Data ([target_name])")
 	P.info = "<tt>[scan_data]</tt>"
 	P.icon_state = "paper_words"
 
@@ -176,7 +176,7 @@
 	if(!S)
 		to_chat(usr, "<span class='warning'>You can't scan this body part.</span>")
 		return
-	if(!S.open())
+	if(!S.how_open())
 		to_chat(usr, "<span class='warning'>You have to cut [S] open first!</span>")
 		return
 	M.visible_message("<span class='notice'>\The [user] scans the wounds on [M]'s [S.name] with [src]</span>")

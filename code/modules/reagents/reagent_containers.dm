@@ -48,9 +48,9 @@
 
 /obj/item/weapon/reagent_containers/proc/update_name_label()
 	if(label_text == "")
-		name = initial(name)
+		SetName(initial(name))
 	else
-		name = "[initial(name)] ([label_text])"
+		SetName("[initial(name)] ([label_text])")
 
 /obj/item/weapon/reagent_containers/proc/standard_dispenser_refill(var/mob/user, var/obj/structure/reagent_dispensers/target) // This goes into afterattack
 	if(!istype(target))
@@ -179,6 +179,7 @@
 		return 1
 
 	var/trans = reagents.trans_to(target, amount_per_transfer_from_this)
+	playsound(src, 'sound/effects/pour.ogg', 25, 1)
 	to_chat(user, "<span class='notice'>You transfer [trans] unit\s of the solution to \the [target].</span>")
 	return 1
 
@@ -192,3 +193,13 @@
 			set_APTFT()
 	else
 		return ..()
+
+/obj/item/weapon/reagent_containers/examine(mob/user)
+	. = ..()
+	if(!reagents)
+		return
+	if(hasHUD(user, HUD_SCIENCE))
+		var/prec = user.skill_fail_chance(SKILL_CHEMISTRY, 10)
+		to_chat(user, "<span class='notice'>The [src] contains: [reagents.get_reagents(precision = prec)].</span>")
+	else if((loc == user) && user.skill_check(SKILL_CHEMISTRY, SKILL_EXPERT))
+		to_chat(user, "<span class='notice'>Using your chemistry knowledge, you indentify the following reagents in \the [src]: [reagents.get_reagents(!user.skill_check(SKILL_CHEMISTRY, SKILL_PROF), 5)].</span>")

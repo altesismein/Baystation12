@@ -184,7 +184,7 @@
 
 /obj/mecha/proc/add_radio()
 	radio = new(src)
-	radio.name = "[src] radio"
+	radio.SetName("[src] radio")
 	radio.icon = icon
 	radio.icon_state = icon_state
 	radio.subspace_transmission = 1
@@ -208,7 +208,7 @@
 
 	for(var/i = 0, i<numticks, i++)
 		sleep(delayfraction)
-		if(!src || !user || !user.canmove || !(user.loc == T))
+		if(!src || !user || user.is_physically_disabled() || !(user.loc == T))
 			return 0
 
 	return 1
@@ -705,6 +705,8 @@
 		src.check_for_internal_damage(list(MECHA_INT_FIRE, MECHA_INT_TEMP_CONTROL))
 	return
 
+/obj/mecha/is_burnable()
+	return TRUE
 
 //////////////////////
 ////// AttackBy //////
@@ -716,7 +718,8 @@
 		var/obj/item/mecha_parts/mecha_equipment/E = W
 		spawn()
 			if(E.can_attach(src))
-				user.drop_item()
+				if(!user.unEquip(E))
+					return
 				E.attach(src)
 				user.visible_message("[user] attaches [W] to [src]", "You attach [W] to [src]")
 			else
@@ -788,9 +791,9 @@
 	else if(istype(W, /obj/item/weapon/cell))
 		if(state==4)
 			if(!src.cell)
+				if(!user.unEquip(W, src))
+					return
 				to_chat(user, "You install the powercell")
-				user.drop_item()
-				W.forceMove(src)
 				src.cell = W
 				src.log_message("Powercell installed")
 			else
@@ -814,9 +817,7 @@
 			to_chat(user, "The [src.name] is at full integrity")
 		return
 
-	else if(istype(W, /obj/item/mecha_parts/mecha_tracking))
-		user.drop_from_inventory(W)
-		W.forceMove(src)
+	else if(istype(W, /obj/item/mecha_parts/mecha_tracking) && user.unEquip(W, src))
 		user.visible_message("[user] attaches [W] to [src].", "You attach [W] to [src]")
 		return
 
@@ -975,8 +976,8 @@
 	set popup_menu = 0
 	if(usr!=occupant)	return
 	lights = !lights
-	if(lights)	set_light(light_range + lights_power)
-	else		set_light(light_range - lights_power)
+	if(lights)	set_light(0.6, 1, 6)
+	else		set_light(0)
 	src.occupant_message("Toggled lights [lights?"on":"off"].")
 	log_message("Toggled lights [lights?"on":"off"].")
 	return
@@ -1152,7 +1153,6 @@
 			if(mmi.brainmob)
 				occupant.loc = mmi
 			mmi.mecha = null
-			src.occupant.canmove = 0
 			src.verbs += /obj/mecha/verb/eject
 		src.occupant = null
 		src.icon_state = src.reset_icon()+"-open"
@@ -1499,7 +1499,7 @@
 		if(usr != src.occupant)	return
 		var/newname = sanitizeSafe(input(occupant,"Choose new exosuit name","Rename exosuit",initial(name)) as text, MAX_NAME_LEN)
 		if(newname)
-			name = newname
+			SetName(newname)
 		else
 			alert(occupant, "nope.avi")
 		return
@@ -1630,7 +1630,7 @@
 		var/cur_occupant = src.occupant
 		O.invisibility = 0
 		O.canmove = 1
-		O.name = AI.name
+		O.SetName(AI.name)
 		O.real_name = AI.real_name
 		O.anchored = 1
 		O.aiRestorePowerRoutine = 0
@@ -1645,11 +1645,11 @@
 		src.occupant = O
 		if(AI.mind)
 			AI.mind.transfer_to(O)
-		AI.name = "Inactive AI"
+		AI.SetName("Inactive AI")
 		AI.real_name = "Inactive AI"
 		AI.icon_state = "ai-empty"
 		spawn(duration)
-			AI.name = O.name
+			AI.SetName(O.name)
 			AI.real_name = O.real_name
 			if(O.mind)
 				O.mind.transfer_to(AI)
@@ -1855,3 +1855,7 @@
 */
 /obj/mecha/fall_damage()
 	return 550
+
+/obj/mecha/lava_act(datum/gas_mixture/air, temperature, pressure)
+	fire_act(air, temperature)
+	. = (health <= 0) ? ..() : FALSE

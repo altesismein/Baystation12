@@ -25,7 +25,7 @@
 /obj/item/weapon/gun/launcher/pneumatic/New()
 	..()
 	item_storage = new(src)
-	item_storage.name = "hopper"
+	item_storage.SetName("hopper")
 	item_storage.max_w_class = max_w_class
 	item_storage.max_storage_space = max_storage_space
 	item_storage.use_sound = null
@@ -65,8 +65,7 @@
 		return ..()
 
 /obj/item/weapon/gun/launcher/pneumatic/attackby(obj/item/W as obj, mob/user as mob)
-	if(!tank && istype(W,/obj/item/weapon/tank))
-		user.drop_from_inventory(W, src)
+	if(!tank && istype(W,/obj/item/weapon/tank) && user.unEquip(W, src))
 		tank = W
 		user.visible_message("[user] jams [W] into [src]'s valve and twists it closed.","You jam [W] into [src]'s valve and twist it closed.")
 		update_icon()
@@ -159,7 +158,6 @@
 /obj/item/weapon/cannonframe/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/pipe))
 		if(buildstate == 0)
-			user.drop_from_inventory(W)
 			qdel(W)
 			to_chat(user, "<span class='notice'>You secure the piping inside the frame.</span>")
 			buildstate++
@@ -177,7 +175,6 @@
 			return
 	else if(istype(W,/obj/item/device/transfer_valve))
 		if(buildstate == 4)
-			user.drop_from_inventory(W)
 			qdel(W)
 			to_chat(user, "<span class='notice'>You install the transfer valve and connect it to the piping.</span>")
 			buildstate++

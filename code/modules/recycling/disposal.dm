@@ -130,9 +130,8 @@
 	if(!I)
 		return
 
-	user.drop_item()
-	if(I)
-		I.forceMove(src)
+	if(!user.unEquip(I, src))
+		return
 
 	to_chat(user, "You place \the [I] into the [src].")
 	for(var/mob/M in viewers(src))
@@ -1142,9 +1141,9 @@
 
 	proc/updatename()
 		if(sort_tag)
-			name = "[initial(name)] ([sort_tag])"
+			SetName("[initial(name)] ([sort_tag])")
 		else
-			name = initial(name)
+			SetName(initial(name))
 
 	New()
 		. = ..()
@@ -1359,9 +1358,9 @@
 
 	proc/updatename()
 		if(sortType)
-			name = "[initial(name)] ([sortType])"
+			SetName("[initial(name)] ([sortType])")
 		else
-			name = initial(name)
+			SetName(initial(name))
 
 	proc/updatedir()
 		posdir = dir

@@ -11,6 +11,10 @@
 	var/material/reinf_material
 	var/reinforcing = 0
 
+/obj/structure/girder/Initialize()
+	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/simple, 100)
+	. = ..()
+
 /obj/structure/girder/displaced
 	icon_state = "displaced"
 	anchored = 0
@@ -100,8 +104,11 @@
 		if(do_after(user, 40,src))
 			if(!src) return
 			to_chat(user, "<span class='notice'>You removed the support struts!</span>")
-			reinf_material.place_dismantled_product(get_turf(src))
-			reinf_material = null
+
+			if(reinf_material)
+				reinf_material.place_dismantled_product(get_turf(src))
+				reinf_material = null
+
 			reset_girder()
 
 	else if(isCrowbar(W) && state == 0 && anchored)
@@ -131,7 +138,7 @@
 		to_chat(user, "<span class='notice'>There isn't enough material here to construct a wall.</span>")
 		return 0
 
-	var/material/M = name_to_material[S.default_type]
+	var/material/M = SSmaterials.get_material_by_name(S.default_type)
 	if(!istype(M))
 		return 0
 
@@ -172,7 +179,7 @@
 		to_chat(user, "<span class='notice'>There isn't enough material here to reinforce the girder.</span>")
 		return 0
 
-	var/material/M = name_to_material[S.default_type]
+	var/material/M = S.material
 	if(!istype(M) || M.integrity < 50)
 		to_chat(user, "You cannot reinforce \the [src] with that; it is too soft.")
 		return 0

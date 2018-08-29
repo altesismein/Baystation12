@@ -14,11 +14,15 @@
 	var/projectile_type					//The bullet type to create when New() is called
 	var/obj/item/projectile/BB = null	//The loaded bullet - make it so that the projectiles are created only when needed?
 	var/spent_icon = "s-casing-spent"
+	var/fall_sounds = list('sound/weapons/guns/casingfall1.ogg','sound/weapons/guns/casingfall2.ogg','sound/weapons/guns/casingfall3.ogg')
 
 /obj/item/ammo_casing/New()
 	..()
 	if(ispath(projectile_type))
 		BB = new projectile_type(src)
+	if(randpixel)
+		pixel_x = rand(-randpixel, randpixel)
+		pixel_y = rand(-randpixel, randpixel)
 
 //removes the projectile from the ammo casing
 /obj/item/ammo_casing/proc/expend()
@@ -58,10 +62,10 @@
 			to_chat(user, "<span class='warning'>The inscription can be at most 20 characters long.</span>")
 		else if(!label_text)
 			to_chat(user, "<span class='notice'>You scratch the inscription off of [initial(BB)].</span>")
-			BB.name = initial(BB.name)
+			BB.SetName(initial(BB.name))
 		else
 			to_chat(user, "<span class='notice'>You inscribe \"[label_text]\" into \the [initial(BB.name)].</span>")
-			BB.name = "[initial(BB.name)] (\"[label_text]\")"
+			BB.SetName("[initial(BB.name)] (\"[label_text]\")")
 	else ..()
 
 /obj/item/ammo_casing/update_icon()
@@ -131,8 +135,8 @@
 		if(stored_ammo.len >= max_ammo)
 			to_chat(user, "<span class='warning'>[src] is full!</span>")
 			return
-		user.remove_from_mob(C)
-		C.forceMove(src)
+		if(!user.unEquip(C, src))
+			return
 		stored_ammo.Add(C)
 		update_icon()
 	else ..()

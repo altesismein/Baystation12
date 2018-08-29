@@ -28,7 +28,7 @@
 	if(!seed)
 		return INITIALIZE_HINT_QDEL
 
-	name = "[seed.seed_name]"
+	SetName("[seed.seed_name]")
 	trash = seed.get_trash_type()
 	if(!dried_type)
 		dried_type = type
@@ -244,7 +244,6 @@
 		if(prob(35))
 			if(user)
 				to_chat(user, "<span class='danger'>\The [src] has fallen to bits.</span>")
-				user.drop_from_inventory(src)
 			qdel(src)
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/attack_self(mob/user as mob)
